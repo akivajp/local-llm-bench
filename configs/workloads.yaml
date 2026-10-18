@@ -1,0 +1,41 @@
+# 内容の異なる入力での速度を見る設定。
+# MoE はトークンごとに使うエキスパートが変わるため、話題・言語によって
+# エキスパートキャッシュのヒット率 (= 速度) が変わりうる。default.yaml の英語詰め物 + 解説文と比べる。
+
+api: openai
+base_url: http://127.0.0.1:8080
+model: default
+api_key: dummy
+timeout: 1800
+warmup: 1
+repeats: 2
+seed: 42
+monitor_interval: 0.5
+extra_body: {}
+
+instruction: >-
+  上の資料とは無関係に、「分散システムにおけるキャッシュ設計」について、
+  具体例を交えて日本語でできるだけ詳しく、長い解説文を書いてください。
+
+scenarios:
+  # 日本語の文章生成 (技術以外の話題)
+  - name: ja-essay
+    prompt_tokens: 0
+    max_tokens: 512
+    instruction: >-
+      日本の四季の移ろいと、それにまつわる年中行事や食文化について、
+      情景が浮かぶような随筆を日本語で長めに書いてください。
+  # コード生成
+  - name: code-gen
+    prompt_tokens: 0
+    max_tokens: 512
+    instruction: >-
+      Python でスレッドセーフな LRU キャッシュ (TTL 付き) を実装し、
+      pytest によるテストコードも書いてください。型ヒントとコメントを付けてください。
+  # コードを読ませて説明させる (コーディングエージェントの典型的な使い方)
+  - name: code-read-8k
+    prompt_tokens: 8000
+    max_tokens: 256
+    filler_file: src/local_llm_bench/cli.py
+    instruction: >-
+      上のソースコードの構成と、各関数の役割を日本語で説明し、改善点を3つ挙げてください。

@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+# この機械固有の設定 (GPU テナントのコンテナ名など)
+scripts/local.env

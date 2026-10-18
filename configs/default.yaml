@@ -1,0 +1,42 @@
+# llm-bench の既定設定。コマンドラインで指定した値がこのファイルより優先される。
+
+# API の種類: openai (/v1/chat/completions) または anthropic (/v1/messages)
+api: openai
+base_url: http://127.0.0.1:8080
+# エンジンによってはモデル名を検証するので、起動時の名前に合わせて上書きする
+model: default
+api_key: dummy
+# 1リクエストの読み取りタイムアウト (秒)。長文の prefill が遅いエンジン向けに長め
+timeout: 1800
+
+# 各シナリオの前に捨てる試行回数 (CUDA graph の構築やキャッシュの温まりを除くため)
+warmup: 1
+# 計測する回数
+repeats: 2
+# 詰め物テキストの乱数シード (先頭の request-id はキャッシュ無効化のため毎回変わる)
+seed: 42
+# 監視のサンプリング間隔 (秒)
+monitor_interval: 0.5
+
+# エンジン固有のパラメータ。例: llama.cpp で思考を切る場合
+#   chat_template_kwargs: {enable_thinking: false}
+extra_body: {}
+
+# 生成させる内容。出力が早く終わると decode 速度の誤差が大きくなるので長めの文章を求める
+instruction: >-
+  上の資料とは無関係に、「分散システムにおけるキャッシュ設計」について、
+  具体例を交えて日本語でできるだけ詳しく、長い解説文を書いてください。
+
+scenarios:
+  # 短い入力で生成速度を見る (対話の1ターン目に相当)
+  - name: short
+    prompt_tokens: 0
+    max_tokens: 512
+  # コーディングエージェントの典型的な入力長
+  - name: ctx8k
+    prompt_tokens: 8000
+    max_tokens: 256
+  # 長い入力での prefill 速度を見る
+  - name: ctx32k
+    prompt_tokens: 32000
+    max_tokens: 128
