@@ -61,6 +61,7 @@ def run_request(
     timeout: float = 1800.0,
     extra_body: dict[str, Any] | None = None,
     on_token: TokenCallback | None = None,
+    keep_content: bool = False,
 ) -> RequestResult:
     """1リクエストを送り、計測結果を返す。例外は握りつぶさず error 欄に入れて返す。
 
@@ -76,6 +77,7 @@ def run_request(
         timeout: 読み取りタイムアウト秒。
         extra_body: エンジン固有のパラメータ (chat_template_kwargs 等) をボディに足す。
         on_token: 生成チャンクを受け取るたびに呼ばれるコールバック。
+        keep_content: True なら本文 (思考部分を除く) の全文を extra["content"] に残す (品質評価用)。
     """
     base = base_url.rstrip("/")
     body: dict[str, Any] = {
@@ -106,10 +108,12 @@ def run_request(
     )
     n_chunks = 0
     text: list[str] = []
+    content: list[str] = []
+    reasoning_chars = 0
 
-    def mark_token(piece: str) -> None:
-        """生成チャンク受信時の共通処理 (時刻記録と進捗通知)。"""
-        nonlocal n_chunks
+    def mark_token(piece: str, is_content: bool = True) -> None:
+        """生成チャンク受信時の共通処理 (時刻記録と進捗通知)。is_content=False は思考部分。"""
+        nonlocal n_chunks, reasoning_chars
         now = time.perf_counter()
         if result.t_first is None:
             result.t_first = now
@@ -117,6 +121,11 @@ def run_request(
         n_chunks += 1
         if sum(len(t) for t in text) < 400:
             text.append(piece)
+        if keep_content:
+            if is_content:
+                content.append(piece)
+            else:
+                reasoning_chars += len(piece)
         if on_token is not None:
             on_token(n_chunks)
 
@@ -142,12 +151,15 @@ def run_request(
         result.completion_tokens = n_chunks
         result.extra["tokens_estimated"] = True
     result.extra["n_chunks"] = n_chunks
+    if keep_content:
+        result.extra["content"] = "".join(content)
+        result.extra["reasoning_chars"] = reasoning_chars
     result.text_head = "".join(text)[:400]
     return result
 
 
 def _consume_openai(
-    resp: httpx.Response, result: RequestResult, mark_token: Callable[[str], None]
+    resp: httpx.Response, result: RequestResult, mark_token: Callable[[str, bool], None]
 ) -> None:
     """OpenAI 互換のストリームを読み、結果に反映する。"""
     for _event, data in _iter_sse(resp):
@@ -160,7 +172,7 @@ def _consume_openai(
             for key in ("content", "reasoning_content", "reasoning"):
                 piece = delta.get(key)
                 if piece:
-                    mark_token(piece)
+                    mark_token(piece, key == "content")
             if choice.get("finish_reason"):
                 result.finish_reason = choice["finish_reason"]
         usage = chunk.get("usage")
@@ -172,7 +184,7 @@ def _consume_openai(
 
 
 def _consume_anthropic(
-    resp: httpx.Response, result: RequestResult, mark_token: Callable[[str], None]
+    resp: httpx.Response, result: RequestResult, mark_token: Callable[[str, bool], None]
 ) -> None:
     """Anthropic Messages のストリームを読み、結果に反映する。"""
     for event, data in _iter_sse(resp):
@@ -184,9 +196,10 @@ def _consume_anthropic(
                 result.prompt_tokens = usage["input_tokens"]
         elif kind == "content_block_delta":
             delta = msg.get("delta") or {}
-            piece = delta.get("text") or delta.get("thinking")
-            if piece:
-                mark_token(piece)
+            if delta.get("text"):
+                mark_token(delta["text"], True)
+            elif delta.get("thinking"):
+                mark_token(delta["thinking"], False)
         elif kind == "message_delta":
             usage = msg.get("usage") or {}
             if usage.get("output_tokens") is not None:

@@ -63,6 +63,8 @@ def setup_logging(log_path: Path | None) -> None:
         fh.setFormatter(logging.Formatter("%(asctime)s %(levelname)s %(message)s"))
         handlers.append(fh)
     logging.basicConfig(level=logging.INFO, format="%(message)s", handlers=handlers, force=True)
+    # httpx はリクエストごとに INFO を出すので抑える
+    logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 def load_config(args: argparse.Namespace) -> dict[str, Any]:
@@ -260,6 +262,82 @@ def cmd_wait(args: argparse.Namespace) -> int:
     return 1
 
 
+def cmd_quality_fetch(args: argparse.Namespace) -> int:
+    """品質評価用の問題集を取得して data/quality/ に保存する。"""
+    from .quality import fetch_set
+
+    setup_logging(None)
+    for name, n in (("gsm8k", args.n_gsm8k), ("mmmlu-ja", args.n_mmmlu)):
+        out = Path(args.data_dir) / f"{name}-{n}.jsonl"
+        if out.exists() and not args.force:
+            log.info("%s: 取得済み (%s)。取り直すには --force", name, out)
+            continue
+        items = fetch_set(name, n, out)
+        log.info("%s: %d 問 → %s", name, len(items), out)
+    return 0
+
+
+def cmd_quality(args: argparse.Namespace) -> int:
+    """問題集を順に解かせて正答率を出す。"""
+    from .quality import extract_answer, is_correct, load_set
+
+    out_dir = Path(args.out_dir) / args.label
+    out_dir.mkdir(parents=True, exist_ok=True)
+    setup_logging(Path(args.log) if args.log else out_dir / "quality.log")
+    extra = json.loads(args.extra_body) if args.extra_body else None
+    items = [it for p in args.sets for it in load_set(Path(p))]
+    log.info("label=%s api=%s base_url=%s 問題数=%d max_tokens=%d extra_body=%s note=%s",
+             args.label, args.api, args.base_url, len(items), args.max_tokens, extra, args.note)
+    (out_dir / "quality-config.yaml").write_text(
+        yaml.safe_dump({**vars(args), "func": None, "started_at": datetime.now().isoformat()},
+                       allow_unicode=True, sort_keys=False),
+        encoding="utf-8",
+    )
+    stats: dict[str, dict[str, float]] = {}
+    with (out_dir / "quality.jsonl").open("w", encoding="utf-8") as f, Progress(
+        SpinnerColumn(), TextColumn("[bold]{task.description}"), BarColumn(), MofNCompleteColumn(),
+        TextColumn("{task.fields[info]}"), TimeElapsedColumn(), console=console,
+    ) as progress:
+        task = progress.add_task("品質評価", total=len(items), info="")
+        for it in items:
+            r = run_request(
+                api=args.api, base_url=args.base_url, model=args.model, prompt=it["prompt"],
+                max_tokens=args.max_tokens, scenario=it["set"], repeat=int(it["id"]),
+                timeout=args.timeout, extra_body=extra, keep_content=True,
+            )
+            content = r.extra.get("content", "")
+            pred = extract_answer(it["set"], content) if not r.error else None
+            ok = is_correct(it["set"], pred, it["answer"])
+            st = stats.setdefault(it["set"], {"n": 0, "ok": 0, "no_answer": 0, "truncated": 0, "tokens": 0})
+            st["n"] += 1
+            st["ok"] += int(ok)
+            st["no_answer"] += int(pred is None)
+            st["truncated"] += int(r.finish_reason in ("length", "max_tokens"))
+            st["tokens"] += r.completion_tokens or 0
+            rec = {**it, "pred": pred, "correct": ok, "finish_reason": r.finish_reason, "error": r.error,
+                   "completion_tokens": r.completion_tokens, "decode_tps": r.decode_tps,
+                   "reasoning_chars": r.extra.get("reasoning_chars"), "content": content}
+            f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+            f.flush()
+            acc = " ".join(f"{k}={v['ok']:.0f}/{v['n']:.0f}" for k, v in stats.items())
+            progress.update(task, advance=1, info=acc)
+            if r.error:
+                log.error("%s #%s: %s", it["set"], it["id"], r.error)
+
+    table = Table(title=f"{args.label} 品質")
+    for col in ("set", "正答", "正答率", "答え無し", "打ち切り", "平均出力 tok"):
+        table.add_column(col, justify="right" if col != "set" else "left")
+    summary = {}
+    for k, v in stats.items():
+        summary[k] = {**v, "accuracy": v["ok"] / v["n"] if v["n"] else None}
+        table.add_row(k, f"{v['ok']:.0f}/{v['n']:.0f}", f"{100 * v['ok'] / v['n']:.1f}%",
+                      f"{v['no_answer']:.0f}", f"{v['truncated']:.0f}", f"{v['tokens'] / v['n']:.0f}")
+    console.print(table)
+    (out_dir / "quality-summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    log.info("結果: %s", out_dir)
+    return 0
+
+
 def _container_running(name: str) -> bool:
     """Docker コンテナが実行中かどうかを返す (存在しなければ False)。"""
     try:
@@ -349,6 +427,27 @@ def build_parser() -> argparse.ArgumentParser:
     w.add_argument("--log", help="ログファイル")
     w.add_argument("--container", help="監視する Docker コンテナ名 (停止したら即座に失敗で終了)")
     w.set_defaults(func=cmd_wait)
+
+    qf = sub.add_parser("quality-fetch", help="品質評価用の問題集を取得する (GSM8K / MMMLU 日本語)")
+    qf.add_argument("--data-dir", default="data/quality")
+    qf.add_argument("--n-gsm8k", type=int, default=30)
+    qf.add_argument("--n-mmmlu", type=int, default=40)
+    qf.add_argument("--force", action="store_true", help="取得済みでも取り直す")
+    qf.set_defaults(func=cmd_quality_fetch)
+
+    q = sub.add_parser("quality", help="問題集を解かせて正答率を出す")
+    q.add_argument("--label", required=True, help="結果の保存名 (runs/<label>/quality.jsonl)")
+    q.add_argument("--sets", nargs="+", default=["data/quality/gsm8k-30.jsonl", "data/quality/mmmlu-ja-40.jsonl"])
+    q.add_argument("--api", choices=["openai", "anthropic"], default="openai")
+    q.add_argument("--base-url", default="http://127.0.0.1:8080")
+    q.add_argument("--model", default="default")
+    q.add_argument("--max-tokens", type=int, default=6144)
+    q.add_argument("--timeout", type=float, default=1800)
+    q.add_argument("--extra-body", help="ボディに足す JSON")
+    q.add_argument("--note", default="")
+    q.add_argument("--out-dir", default="runs")
+    q.add_argument("--log", help="ログファイル (既定: runs/<label>/quality.log)")
+    q.set_defaults(func=cmd_quality)
 
     c = sub.add_parser("compare", help="複数の結果を比較表にする")
     c.add_argument("run_dirs", nargs="+", help="runs/<label> ディレクトリ")

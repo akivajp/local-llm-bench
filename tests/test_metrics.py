@@ -113,3 +113,22 @@ def _patch_transport(monkeypatch, body: bytes, status: int = 200) -> None:
         return orig(*args, **kwargs)
 
     monkeypatch.setattr(httpx, "Client", factory)
+
+
+def test_extract_answer_gsm8k() -> None:
+    from local_llm_bench.quality import extract_answer, is_correct
+
+    assert extract_answer("gsm8k", "計算すると…\n答え: 1,234") == "1234"
+    assert extract_answer("gsm8k", "答え：**72.0**") == "72"
+    assert extract_answer("gsm8k", "最終的に 18 ドル") == "18"
+    assert extract_answer("gsm8k", "わかりません") is None
+    assert is_correct("gsm8k", "18", "18") and not is_correct("gsm8k", None, "18")
+
+
+def test_extract_answer_mmmlu() -> None:
+    from local_llm_bench.quality import extract_answer, is_correct
+
+    assert extract_answer("mmmlu-ja", "Bが正しい理由は…\n答え: C") == "C"
+    assert extract_answer("mmmlu-ja", "答え：Ｄ（理由）") == "D"
+    assert extract_answer("mmmlu-ja", "正解は B です") == "B"
+    assert is_correct("mmmlu-ja", "c", "C")
