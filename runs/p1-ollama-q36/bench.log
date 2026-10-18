@@ -1,0 +1,25 @@
+2026-10-18 22:30:54,328 INFO label=p1-ollama-q36 api=openai base_url=http://127.0.0.1:11500 model=qwen36-ud-q4kxl
+2026-10-18 22:30:54,329 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256), ('ctx32k', 32000, 128)] extra_body={}
+2026-10-18 22:30:54,348 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 36 MiB
+2026-10-18 22:30:54,348 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 16 MiB
+2026-10-18 22:30:54,349 INFO host RAM used: 11.8 GiB
+2026-10-18 22:30:54,349 INFO note: ollama 0.40.6 default, ctx 65536, same GGUF
+2026-10-18 22:31:44,298 INFO HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 22:31:52,362 INFO short warmup: in=75 out=512 ttft=49.93s prefill=1.5 decode=63.4 finish=length
+2026-10-18 22:31:52,463 INFO HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 22:31:56,961 INFO short #1: in=79 out=512 ttft=0.10s prefill=804.4 decode=113.6 finish=length
+2026-10-18 22:31:57,066 INFO HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 22:32:01,556 INFO short #2: in=79 out=512 ttft=0.10s prefill=773.0 decode=113.9 finish=length
+2026-10-18 22:32:02,597 INFO HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 22:32:04,929 INFO ctx8k warmup: in=7777 out=256 ttft=1.04s prefill=7490.7 decode=109.4 finish=length
+2026-10-18 22:32:06,021 INFO HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 22:32:08,357 INFO ctx8k #1: in=7782 out=256 ttft=1.09s prefill=7144.4 decode=109.3 finish=length
+2026-10-18 22:32:09,453 INFO HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 22:32:11,798 INFO ctx8k #2: in=7780 out=256 ttft=1.09s prefill=7116.6 decode=108.8 finish=length
+2026-10-18 22:32:15,840 INFO HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 22:32:17,135 INFO ctx32k warmup: in=31486 out=128 ttft=4.04s prefill=7799.1 decode=98.2 finish=length
+2026-10-18 22:32:21,285 INFO HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 22:32:22,577 INFO ctx32k #1: in=31487 out=128 ttft=4.15s prefill=7590.0 decode=98.6 finish=length
+2026-10-18 22:32:26,696 INFO HTTP Request: POST http://127.0.0.1:11500/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 22:32:27,989 INFO ctx32k #2: in=31488 out=128 ttft=4.11s prefill=7654.5 decode=98.3 finish=length
+2026-10-18 22:32:27,993 INFO 結果: runs/p1-ollama-q36

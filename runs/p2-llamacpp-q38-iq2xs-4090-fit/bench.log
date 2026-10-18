@@ -1,0 +1,25 @@
+2026-10-18 23:19:06,577 INFO label=p2-llamacpp-q38-iq2xs-4090-fit api=openai base_url=http://127.0.0.1:18081 model=default
+2026-10-18 23:19:06,578 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256), ('ctx32k', 32000, 128)] extra_body={}
+2026-10-18 23:19:06,603 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 22464 MiB
+2026-10-18 23:19:06,604 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 16 MiB
+2026-10-18 23:19:06,604 INFO host RAM used: 11.4 GiB
+2026-10-18 23:19:06,605 INFO note: llama.cpp b11718 -dev CUDA0 --fit(default, no -ot), mmap
+2026-10-18 23:19:06,626 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 23:19:17,424 INFO short warmup: in=116 out=512 ttft=1.25s prefill=92.9 decode=53.5 finish=length
+2026-10-18 23:19:17,521 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 23:19:27,419 INFO short #1: in=118 out=512 ttft=0.72s prefill=164.8 decode=55.1 finish=length
+2026-10-18 23:19:27,515 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 23:19:37,458 INFO short #2: in=114 out=512 ttft=0.71s prefill=159.8 decode=54.8 finish=length
+2026-10-18 23:19:37,560 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 23:19:54,459 INFO ctx8k warmup: in=7824 out=256 ttft=12.25s prefill=638.8 decode=53.7 finish=length
+2026-10-18 23:19:54,636 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 23:20:11,212 INFO ctx8k #1: in=7817 out=256 ttft=12.08s prefill=647.3 decode=54.6 finish=length
+2026-10-18 23:20:11,390 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 23:20:28,001 INFO ctx8k #2: in=7821 out=256 ttft=12.04s prefill=649.4 decode=53.8 finish=length
+2026-10-18 23:20:28,206 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 23:21:17,289 INFO ctx32k warmup: in=31527 out=128 ttft=46.91s prefill=672.1 decode=53.5 finish=length
+2026-10-18 23:21:17,671 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 23:22:06,247 INFO ctx32k #1: in=31526 out=128 ttft=46.61s prefill=676.4 decode=54.3 finish=length
+2026-10-18 23:22:06,632 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-18 23:22:55,450 INFO ctx32k #2: in=31525 out=128 ttft=46.80s prefill=673.6 decode=53.0 finish=length
+2026-10-18 23:22:55,454 INFO 結果: runs/p2-llamacpp-q38-iq2xs-4090-fit

@@ -1,0 +1,25 @@
+2026-10-19 00:06:48,620 INFO label=p2-strata-q38-iq3s-4090-nomtp api=openai base_url=http://127.0.0.1:18080 model=default
+2026-10-19 00:06:48,621 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256), ('ctx32k', 32000, 128)] extra_body={}
+2026-10-19 00:06:48,645 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23644 MiB
+2026-10-19 00:06:48,646 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 16 MiB
+2026-10-19 00:06:48,646 INFO host RAM used: 61.2 GiB
+2026-10-19 00:06:48,646 INFO note: Strata ? (docker) GPU=0, MTP off (--mtp/--spec-min-p removed, --spec 4 kept)
+2026-10-19 00:06:48,664 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:06:54,875 INFO short warmup: in=120 out=512 ttft=0.57s prefill=209.5 decode=90.6 finish=length
+2026-10-19 00:06:54,880 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:07:00,375 INFO short #1: in=119 out=512 ttft=0.36s prefill=327.1 decode=99.6 finish=length
+2026-10-19 00:07:00,380 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:07:05,871 INFO short #2: in=120 out=512 ttft=0.35s prefill=341.1 decode=99.4 finish=length
+2026-10-19 00:07:05,879 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:07:13,134 INFO ctx8k warmup: in=7822 out=256 ttft=4.59s prefill=1702.7 decode=95.7 finish=length
+2026-10-19 00:07:13,143 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:07:18,908 INFO ctx8k #1: in=7823 out=256 ttft=3.16s prefill=2473.0 decode=97.9 finish=length
+2026-10-19 00:07:18,916 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:07:24,605 INFO ctx8k #2: in=7823 out=256 ttft=3.16s prefill=2475.0 decode=100.7 finish=length
+2026-10-19 00:07:24,623 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:07:38,374 INFO ctx32k warmup: in=31530 out=128 ttft=12.42s prefill=2538.7 decode=94.6 finish=length
+2026-10-19 00:07:38,394 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:07:51,983 INFO ctx32k #1: in=31529 out=128 ttft=12.47s prefill=2529.0 decode=112.0 finish=length
+2026-10-19 00:07:52,000 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:08:05,755 INFO ctx32k #2: in=31530 out=128 ttft=12.47s prefill=2527.8 decode=98.3 finish=length
+2026-10-19 00:08:05,759 INFO 結果: runs/p2-strata-q38-iq3s-4090-nomtp

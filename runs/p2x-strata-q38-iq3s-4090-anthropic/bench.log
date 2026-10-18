@@ -1,0 +1,25 @@
+2026-10-19 00:17:22,226 INFO label=p2x-strata-q38-iq3s-4090-anthropic api=anthropic base_url=http://127.0.0.1:18080 model=default
+2026-10-19 00:17:22,227 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256), ('ctx32k', 32000, 128)] extra_body={}
+2026-10-19 00:17:22,247 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23812 MiB
+2026-10-19 00:17:22,248 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 16 MiB
+2026-10-19 00:17:22,248 INFO host RAM used: 61.6 GiB
+2026-10-19 00:17:22,249 INFO note: Strata (docker) GPU=0, MTP spec 4, Anthropic /v1/messages
+2026-10-19 00:17:22,269 INFO HTTP Request: POST http://127.0.0.1:18080/v1/messages "HTTP/1.0 200 OK"
+2026-10-19 00:17:26,874 INFO short warmup: in=119 out=512 ttft=0.40s prefill=296.9 decode=122.0 finish=max_tokens
+2026-10-19 00:17:26,879 INFO HTTP Request: POST http://127.0.0.1:18080/v1/messages "HTTP/1.0 200 OK"
+2026-10-19 00:17:30,762 INFO short #1: in=119 out=512 ttft=0.38s prefill=311.3 decode=145.9 finish=max_tokens
+2026-10-19 00:17:30,766 INFO HTTP Request: POST http://127.0.0.1:18080/v1/messages "HTTP/1.0 200 OK"
+2026-10-19 00:17:35,111 INFO short #2: in=122 out=512 ttft=0.38s prefill=317.0 decode=129.0 finish=max_tokens
+2026-10-19 00:17:35,120 INFO HTTP Request: POST http://127.0.0.1:18080/v1/messages "HTTP/1.0 200 OK"
+2026-10-19 00:17:41,747 INFO ctx8k warmup: in=7822 out=256 ttft=4.67s prefill=1673.4 decode=130.4 finish=max_tokens
+2026-10-19 00:17:41,755 INFO HTTP Request: POST http://127.0.0.1:18080/v1/messages "HTTP/1.0 200 OK"
+2026-10-19 00:17:47,002 INFO ctx8k #1: in=7822 out=256 ttft=3.26s prefill=2398.3 decode=128.3 finish=max_tokens
+2026-10-19 00:17:47,010 INFO HTTP Request: POST http://127.0.0.1:18080/v1/messages "HTTP/1.0 200 OK"
+2026-10-19 00:17:52,172 INFO ctx8k #2: in=7824 out=256 ttft=3.26s prefill=2403.3 decode=133.5 finish=max_tokens
+2026-10-19 00:17:52,191 INFO HTTP Request: POST http://127.0.0.1:18080/v1/messages "HTTP/1.0 200 OK"
+2026-10-19 00:18:05,911 INFO ctx32k warmup: in=31532 out=128 ttft=12.81s prefill=2461.2 decode=138.2 finish=max_tokens
+2026-10-19 00:18:05,930 INFO HTTP Request: POST http://127.0.0.1:18080/v1/messages "HTTP/1.0 200 OK"
+2026-10-19 00:18:19,677 INFO ctx32k #1: in=31526 out=128 ttft=12.82s prefill=2458.2 decode=136.1 finish=max_tokens
+2026-10-19 00:18:19,695 INFO HTTP Request: POST http://127.0.0.1:18080/v1/messages "HTTP/1.0 200 OK"
+2026-10-19 00:18:33,388 INFO ctx32k #2: in=31528 out=128 ttft=12.83s prefill=2457.6 decode=145.3 finish=max_tokens
+2026-10-19 00:18:33,392 INFO 結果: runs/p2x-strata-q38-iq3s-4090-anthropic

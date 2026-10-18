@@ -1,0 +1,25 @@
+2026-10-19 00:18:50,935 INFO label=p2x-llamacpp-q38-iq3s-2gpu-workloads api=openai base_url=http://127.0.0.1:18081 model=default
+2026-10-19 00:18:50,936 INFO warmup=1 repeats=2 scenarios=[('ja-essay', 0, 512), ('code-gen', 0, 512), ('code-read-8k', 8000, 256)] extra_body={}
+2026-10-19 00:18:50,954 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 22830 MiB
+2026-10-19 00:18:50,955 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 18797 MiB
+2026-10-19 00:18:50,955 INFO host RAM used: 11.5 GiB
+2026-10-19 00:18:50,956 INFO note: llama.cpp b11718 -sm layer --fit, workloads.yaml
+2026-10-19 00:18:50,976 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-19 00:19:04,708 INFO ja-essay warmup: in=117 out=512 ttft=0.99s prefill=118.3 decode=40.1 finish=length
+2026-10-19 00:19:04,803 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-19 00:19:17,930 INFO ja-essay #1: in=118 out=512 ttft=0.62s prefill=189.5 decode=40.6 finish=length
+2026-10-19 00:19:18,028 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-19 00:19:31,115 INFO ja-essay #2: in=123 out=512 ttft=0.63s prefill=196.3 decode=40.7 finish=length
+2026-10-19 00:19:31,210 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-19 00:19:44,521 INFO code-gen warmup: in=128 out=512 ttft=0.65s prefill=196.1 decode=40.1 finish=length
+2026-10-19 00:19:44,615 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-19 00:19:57,958 INFO code-gen #1: in=126 out=512 ttft=0.65s prefill=194.5 decode=40.0 finish=length
+2026-10-19 00:19:58,052 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-19 00:20:11,295 INFO code-gen #2: in=126 out=512 ttft=0.65s prefill=194.3 decode=40.3 finish=length
+2026-10-19 00:20:11,387 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-19 00:20:36,585 INFO code-read-8k warmup: in=8199 out=256 ttft=18.88s prefill=434.3 decode=39.8 finish=length
+2026-10-19 00:20:36,758 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-19 00:21:01,811 INFO code-read-8k #1: in=8201 out=256 ttft=18.84s prefill=435.3 decode=40.0 finish=length
+2026-10-19 00:21:01,983 INFO HTTP Request: POST http://127.0.0.1:18081/v1/chat/completions "HTTP/1.1 200 OK"
+2026-10-19 00:21:27,075 INFO code-read-8k #2: in=8202 out=256 ttft=18.87s prefill=434.8 decode=39.9 finish=length
+2026-10-19 00:21:27,078 INFO 結果: runs/p2x-llamacpp-q38-iq3s-2gpu-workloads

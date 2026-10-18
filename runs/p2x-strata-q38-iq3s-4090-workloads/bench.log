@@ -1,0 +1,25 @@
+2026-10-19 00:16:37,426 INFO label=p2x-strata-q38-iq3s-4090-workloads api=openai base_url=http://127.0.0.1:18080 model=default
+2026-10-19 00:16:37,427 INFO warmup=1 repeats=2 scenarios=[('ja-essay', 0, 512), ('code-gen', 0, 512), ('code-read-8k', 8000, 256)] extra_body={}
+2026-10-19 00:16:37,452 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23646 MiB
+2026-10-19 00:16:37,453 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 16 MiB
+2026-10-19 00:16:37,454 INFO host RAM used: 61.2 GiB
+2026-10-19 00:16:37,454 INFO note: Strata (docker) GPU=0, MTP spec 4, workloads.yaml
+2026-10-19 00:16:37,477 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:16:42,503 INFO ja-essay warmup: in=119 out=512 ttft=0.62s prefill=192.4 decode=115.9 finish=length
+2026-10-19 00:16:42,508 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:16:46,906 INFO ja-essay #1: in=120 out=512 ttft=0.39s prefill=305.7 decode=127.6 finish=length
+2026-10-19 00:16:46,911 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:16:51,322 INFO ja-essay #2: in=119 out=512 ttft=0.37s prefill=318.9 decode=126.5 finish=length
+2026-10-19 00:16:51,327 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:16:56,381 INFO code-gen warmup: in=129 out=512 ttft=0.46s prefill=278.8 decode=111.3 finish=length
+2026-10-19 00:16:56,386 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:17:00,699 INFO code-gen #1: in=127 out=512 ttft=0.42s prefill=299.9 decode=131.4 finish=length
+2026-10-19 00:17:00,704 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:17:05,061 INFO code-gen #2: in=128 out=512 ttft=0.40s prefill=321.5 decode=129.0 finish=length
+2026-10-19 00:17:05,075 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:17:11,335 INFO code-read-8k warmup: in=8198 out=256 ttft=4.07s prefill=2015.5 decode=115.8 finish=length
+2026-10-19 00:17:11,342 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:17:16,704 INFO code-read-8k #1: in=8201 out=256 ttft=3.37s prefill=2431.0 decode=128.1 finish=length
+2026-10-19 00:17:16,712 INFO HTTP Request: POST http://127.0.0.1:18080/v1/chat/completions "HTTP/1.0 200 OK"
+2026-10-19 00:17:22,043 INFO code-read-8k #2: in=8201 out=256 ttft=3.37s prefill=2433.4 decode=129.8 finish=length
+2026-10-19 00:17:22,047 INFO 結果: runs/p2x-strata-q38-iq3s-4090-workloads
