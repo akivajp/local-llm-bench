@@ -1,0 +1,2 @@
+fizzbuzz.py に fizzbuzz(n: int) -> list[str] を実装してください（1 から n までについて、3 の倍数は "Fizz"、5 の倍数は "Buzz"、両方の倍数は "FizzBuzz"、それ以外は数字の文字列）。
+あわせて test_fizzbuzz.py に pytest のテストを書き、`python3 -m pytest -q` を実行して全てのテストが通ることを確認してください。
