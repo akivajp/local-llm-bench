@@ -1,0 +1,16 @@
+cmd: quality
+label: q-llamacpp-q38-iq3s-2gpu
+sets:
+- data/quality/gsm8k-30.jsonl
+- data/quality/mmmlu-ja-40.jsonl
+api: openai
+base_url: http://127.0.0.1:18081
+model: default
+max_tokens: 6144
+timeout: 1800
+extra_body: null
+note: llama.cpp b11718 IQ3_S -sm layer --fit
+out_dir: runs
+log: null
+func: null
+started_at: '2026-10-19T01:05:34.149938'

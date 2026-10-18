@@ -1,0 +1,2 @@
+2026-10-19 01:05:34,148 INFO label=q-llamacpp-q38-iq3s-2gpu api=openai base_url=http://127.0.0.1:18081 問題数=70 max_tokens=6144 extra_body=None note=llama.cpp b11718 IQ3_S -sm layer --fit
+2026-10-19 01:23:22,257 INFO 結果: runs/q-llamacpp-q38-iq3s-2gpu

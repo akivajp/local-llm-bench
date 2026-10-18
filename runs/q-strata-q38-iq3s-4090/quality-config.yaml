@@ -1,0 +1,16 @@
+cmd: quality
+label: q-strata-q38-iq3s-4090
+sets:
+- data/quality/gsm8k-30.jsonl
+- data/quality/mmmlu-ja-40.jsonl
+api: openai
+base_url: http://127.0.0.1:18080
+model: default
+max_tokens: 6144
+timeout: 1800
+extra_body: null
+note: Strata (docker) IQ3_S GPU=0, MTP spec 4
+out_dir: runs
+log: null
+func: null
+started_at: '2026-10-19T00:51:59.071441'

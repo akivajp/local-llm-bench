@@ -1,0 +1,139 @@
+diff --git a/__pycache__/fizzbuzz.cpython-312.pyc b/__pycache__/fizzbuzz.cpython-312.pyc
+new file mode 100644
+index 0000000..ef129f3
+Binary files /dev/null and b/__pycache__/fizzbuzz.cpython-312.pyc differ
+diff --git a/__pycache__/test_fizzbuzz.cpython-312-pytest-9.1.1.pyc b/__pycache__/test_fizzbuzz.cpython-312-pytest-9.1.1.pyc
+new file mode 100644
+index 0000000..244cde2
+Binary files /dev/null and b/__pycache__/test_fizzbuzz.cpython-312-pytest-9.1.1.pyc differ
+diff --git a/fizzbuzz.py b/fizzbuzz.py
+new file mode 100644
+index 0000000..e2849c8
+--- /dev/null
++++ b/fizzbuzz.py
+@@ -0,0 +1,32 @@
++"""FizzBuzz: 1 から n までの文字列のリストを返す。"""
++
++from __future__ import annotations
++
++
++def fizzbuzz(n: int) -> list[str]:
++    """1 から n までの各数について、以下の文字列を順に並べたリストを返す。
++
++    - 3 と 5 の両方の倍数: "FizzBuzz"
++    - 3 の倍数:          "Fizz"
++    - 5 の倍数:          "Buzz"
++    - それ以外:            数字そのものの文字列
++
++    n が 1 未満の場合は空のリストを返す。
++    """
++    result: list[str] = []
++    for i in range(1, n + 1):
++        if i % 15 == 0:
++            result.append("FizzBuzz")
++        elif i % 3 == 0:
++            result.append("Fizz")
++        elif i % 5 == 0:
++            result.append("Buzz")
++        else:
++            result.append(str(i))
++    return result
++
++
++if __name__ == "__main__":
++    lines = fizzbuzz(15)
++    if lines:
++        print("\n".join(lines))
+diff --git a/test_fizzbuzz.py b/test_fizzbuzz.py
+new file mode 100644
+index 0000000..66a2c11
+--- /dev/null
++++ b/test_fizzbuzz.py
+@@ -0,0 +1,87 @@
++import typing
++
++import pytest
++
++from fizzbuzz import fizzbuzz
++
++
++def test_signature():
++    hints = typing.get_type_hints(fizzbuzz)
++    assert hints == {"n": int, "return": list[str]}
++
++
++def test_returns_list_of_str():
++    result = fizzbuzz(15)
++    assert isinstance(result, list)
++    assert all(isinstance(item, str) for item in result)
++
++
++def test_first_fifteen():
++    assert fizzbuzz(15) == [
++        "1", "2", "Fizz", "4", "Buzz",
++        "Fizz", "7", "8", "Fizz", "Buzz",
++        "11", "Fizz", "13", "14", "FizzBuzz",
++    ]
++
++
++def test_length_matches_n():
++    for n in (0, 1, 5, 15, 100):
++        assert len(fizzbuzz(n)) == max(n, 0)
++
++
++def expected_positions(n, predicate):
++    return set(i for i in range(1, n + 1) if predicate(i))
++
++
++def actual_positions(result, label):
++    return set(i for i, value in enumerate(result, start=1) if value == label)
++
++
++def test_multiples_of_three_are_fizz():
++    result = fizzbuzz(30)
++    expected = expected_positions(30, lambda i: i % 3 == 0 and i % 5 != 0)
++    assert actual_positions(result, "Fizz") == expected
++
++
++def test_multiples_of_five_are_buzz():
++    result = fizzbuzz(30)
++    expected = expected_positions(30, lambda i: i % 5 == 0 and i % 3 != 0)
++    assert actual_positions(result, "Buzz") == expected
++
++
++def test_multiples_of_fifteen_are_fizzbuzz():
++    result = fizzbuzz(45)
++    assert actual_positions(result, "FizzBuzz") == expected_positions(45, lambda i: i % 15 == 0)
++
++
++def test_others_are_number_strings():
++    result = fizzbuzz(10)
++    plain = [i for i in range(1, 11) if i % 3 and i % 5]
++    assert [result[i - 1] for i in plain] == [str(i) for i in plain]
++
++
++@pytest.mark.parametrize(
++    ("n", "expected"),
++    [
++        (0, []),
++        (1, ["1"]),
++        (2, ["1", "2"]),
++        (3, ["1", "2", "Fizz"]),
++        (5, ["1", "2", "Fizz", "4", "Buzz"]),
++        (-3, []),
++    ],
++)
++def test_small_values(n, expected):
++    assert fizzbuzz(n) == expected
++
++
++def test_counts_up_to_100():
++    result = fizzbuzz(100)
++    # 3 の倍数は 33 個、5 の倍数は 20 個、15 の倍数は 6 個
++    assert result.count("FizzBuzz") == 6
++    assert result.count("Fizz") == 33 - 6
++    assert result.count("Buzz") == 20 - 6
++    assert len(result) == 6 + 27 + 14 + (100 - 33 - 20 + 6)
++    assert result[97] == "98"  # 3 でも 5 でも割り切れない → 数字の文字列
++    assert result[98] == "Fizz"  # 99
++    assert result[99] == "Buzz"  # 100

@@ -1,0 +1,18 @@
+{
+  "gsm8k": {
+    "n": 30,
+    "ok": 29,
+    "no_answer": 0,
+    "truncated": 0,
+    "tokens": 8003,
+    "accuracy": 0.9666666666666667
+  },
+  "mmmlu-ja": {
+    "n": 40,
+    "ok": 34,
+    "no_answer": 2,
+    "truncated": 2,
+    "tokens": 32895,
+    "accuracy": 0.85
+  }
+}
