@@ -1,0 +1,2 @@
+2026-10-19 03:34:54,309 INFO label=q-llamacpp-gpt-oss-120b-2gpu api=openai base_url=http://127.0.0.1:18081 問題数=30 max_tokens=4096 extra_body=None note=llama.cpp b11718 gpt-oss-120b-GGUF/gpt-oss-120b-F16.gguf -sm layer --fit
+2026-10-19 03:38:58,086 INFO 結果: runs/q-llamacpp-gpt-oss-120b-2gpu

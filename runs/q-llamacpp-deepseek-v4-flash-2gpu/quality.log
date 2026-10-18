@@ -1,0 +1,2 @@
+2026-10-19 04:59:24,453 INFO label=q-llamacpp-deepseek-v4-flash-2gpu api=openai base_url=http://127.0.0.1:18081 問題数=30 max_tokens=4096 extra_body=None note=llama.cpp b11718 DeepSeek-V4-Flash-GGUF/UD-IQ1_S/DeepSeek-V4-Flash-UD-IQ1_S-00001-of-00003.gguf -sm layer --fit
+2026-10-19 05:14:55,757 INFO 結果: runs/q-llamacpp-deepseek-v4-flash-2gpu

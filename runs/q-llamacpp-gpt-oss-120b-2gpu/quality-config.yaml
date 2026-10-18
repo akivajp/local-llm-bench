@@ -1,0 +1,16 @@
+cmd: quality
+label: q-llamacpp-gpt-oss-120b-2gpu
+sets:
+- data/quality/gsm8k-10.jsonl
+- data/quality/mmmlu-ja-20.jsonl
+api: openai
+base_url: http://127.0.0.1:18081
+model: default
+max_tokens: 4096
+timeout: 1800
+extra_body: null
+note: llama.cpp b11718 gpt-oss-120b-GGUF/gpt-oss-120b-F16.gguf -sm layer --fit
+out_dir: runs
+log: null
+func: null
+started_at: '2026-10-19T03:34:54.311122'

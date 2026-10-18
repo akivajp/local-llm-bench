@@ -1,0 +1,16 @@
+2026-10-19 05:53:20,166 INFO label=p3-llamacpp-glm53-flash-2gpu-fit api=openai base_url=http://127.0.0.1:18081 model=default
+2026-10-19 05:53:20,167 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256), ('ctx32k', 32000, 128)] extra_body={}
+2026-10-19 05:53:20,187 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 22340 MiB
+2026-10-19 05:53:20,188 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 18393 MiB
+2026-10-19 05:53:20,188 INFO host RAM used: 11.8 GiB
+2026-10-19 05:53:20,188 INFO note: llama.cpp b11718 GLM-5.3-Flash-GGUF/UD-IQ1_S/GLM-5.3-Flash-UD-IQ1_S-00001-of-00003.gguf -sm layer --fit
+2026-10-19 05:54:13,615 INFO short warmup: in=86 out=512 ttft=12.27s prefill=7.0 decode=12.4 finish=length
+2026-10-19 05:54:49,350 INFO short #1: in=87 out=512 ttft=3.01s prefill=28.9 decode=15.6 finish=length
+2026-10-19 05:55:24,118 INFO short #2: in=83 out=512 ttft=2.67s prefill=31.1 decode=15.9 finish=length
+2026-10-19 05:56:29,239 INFO ctx8k warmup: in=7351 out=256 ttft=48.97s prefill=150.1 decode=15.8 finish=length
+2026-10-19 05:57:33,775 INFO ctx8k #1: in=7349 out=256 ttft=48.36s prefill=152.0 decode=15.8 finish=length
+2026-10-19 05:58:38,172 INFO ctx8k #2: in=7348 out=256 ttft=48.24s prefill=152.3 decode=15.8 finish=length
+2026-10-19 06:02:00,587 INFO ctx32k warmup: in=29865 out=128 ttft=194.09s prefill=153.9 decode=15.3 finish=length
+2026-10-19 06:05:22,971 INFO ctx32k #1: in=29868 out=128 ttft=194.35s prefill=153.7 decode=15.8 finish=length
+2026-10-19 06:08:45,734 INFO ctx32k #2: in=29869 out=128 ttft=194.65s prefill=153.5 decode=15.7 finish=length
+2026-10-19 06:08:45,763 INFO 結果: runs/p3-llamacpp-glm53-flash-2gpu-fit

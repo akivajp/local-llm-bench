@@ -1,0 +1,16 @@
+2026-10-19 03:40:36,062 INFO label=p3-llamacpp-nemotron35-super-4090-fit api=openai base_url=http://127.0.0.1:18081 model=default
+2026-10-19 03:40:36,064 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256), ('ctx32k', 32000, 128)] extra_body={}
+2026-10-19 03:40:36,088 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 21894 MiB
+2026-10-19 03:40:36,089 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 16 MiB
+2026-10-19 03:40:36,089 INFO host RAM used: 12.4 GiB
+2026-10-19 03:40:36,090 INFO note: llama.cpp b11718 NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-GGUF/UD-Q3_K_XL/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-UD-Q3_K_XL-00001-of-00003.gguf -dev CUDA0 --fit
+2026-10-19 03:41:02,301 INFO short warmup: in=98 out=512 ttft=2.79s prefill=35.1 decode=21.8 finish=length
+2026-10-19 03:41:28,280 INFO short #1: in=94 out=512 ttft=2.67s prefill=35.2 decode=21.9 finish=length
+2026-10-19 03:41:54,280 INFO short #2: in=97 out=512 ttft=2.67s prefill=36.3 decode=21.9 finish=length
+2026-10-19 03:42:48,073 INFO ctx8k warmup: in=7802 out=256 ttft=42.08s prefill=185.4 decode=21.8 finish=length
+2026-10-19 03:43:41,781 INFO ctx8k #1: in=7800 out=256 ttft=42.04s prefill=185.5 decode=21.9 finish=length
+2026-10-19 03:44:35,508 INFO ctx8k #2: in=7802 out=256 ttft=42.05s prefill=185.5 decode=21.9 finish=length
+2026-10-19 03:47:16,375 INFO ctx32k warmup: in=31510 out=128 ttft=154.99s prefill=203.3 decode=21.6 finish=length
+2026-10-19 03:49:57,289 INFO ctx32k #1: in=31505 out=128 ttft=155.08s prefill=203.2 decode=21.8 finish=length
+2026-10-19 03:52:38,796 INFO ctx32k #2: in=31506 out=128 ttft=155.66s prefill=202.4 decode=21.7 finish=length
+2026-10-19 03:52:38,801 INFO 結果: runs/p3-llamacpp-nemotron35-super-4090-fit

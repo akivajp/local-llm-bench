@@ -4,9 +4,11 @@
 #
 # usage: phase3.sh <model-key> [...]   (省略時は全部)
 #   model-key: qwen35-122b | gpt-oss-120b | nemotron35-super | deepseek-v4-flash | glm53-flash
-# 環境変数: KEEP=1 で計測後もモデルを消さない、SKIP_QUALITY=1 で品質評価を省く
+# 環境変数: KEEP=1 で計測後もモデルを消さない、SKIP_QUALITY=1 で品質評価を省く、SKIP_SPEED=1 で速度計測を省く
+#           QUALITY_SETS / QUALITY_MAX_TOKENS で品質評価の問題集・出力上限を変える
+#           (既定は GSM8K 10問 + MMMLU-JA 20問、4096 トークン。思考の長いモデルで1時間以上かかるのを避けるため)
 set -euo pipefail
-case "${1:-}" in -h|--help) sed -n '2,7p' "$0"; exit 0 ;; esac
+case "${1:-}" in -h|--help) sed -n '2,9p' "$0"; exit 0 ;; esac
 
 source "$(dirname "$0")/lib.sh"
 BATCH_LOG="${LOGS}/phase3-$(date +%Y%m%d-%H%M%S).log"
@@ -48,6 +50,7 @@ for key in "${TARGETS[@]}"; do
   [[ -z "$model_path" ]] && model_path="$(basename "$repo")/${first}"
   log "model: ${model_path} ($(du -sh "$dir" | cut -f1))"
 
+  if [[ "${SKIP_SPEED:-0}" != "1" ]]; then
   "${SCRIPTS}/llamacpp.sh" up "$model_path" -dev CUDA0
   bench "p3-llamacpp-${key}-4090-fit" "$L" llmb-llamacpp --note "llama.cpp ${LV} ${model_path} -dev CUDA0 --fit"
   "${SCRIPTS}/llamacpp.sh" down
@@ -56,12 +59,20 @@ for key in "${TARGETS[@]}"; do
   bench "p3-llamacpp-${key}-2gpu-fit-moecache" "$L" llmb-llamacpp --note "llama.cpp ${LV} ${model_path} -sm layer --fit --moe-cache-mib ${MOE_CACHE_MIB:-6144}"
   "${SCRIPTS}/llamacpp.sh" down
 
+  fi
+
   "${SCRIPTS}/llamacpp.sh" up "$model_path" -sm layer
-  bench "p3-llamacpp-${key}-2gpu-fit" "$L" llmb-llamacpp --note "llama.cpp ${LV} ${model_path} -sm layer --fit"
+  if [[ "${SKIP_SPEED:-0}" != "1" ]]; then
+    bench "p3-llamacpp-${key}-2gpu-fit" "$L" llmb-llamacpp --note "llama.cpp ${LV} ${model_path} -sm layer --fit"
+  else
+    (cd "$REPO" && uv run llm-bench wait --base-url "$L" --container llmb-llamacpp --timeout 1200)
+  fi
   if [[ "${SKIP_QUALITY:-0}" != "1" ]]; then
     # 2GPU --fit のサーバーをそのまま使って品質評価
+    # shellcheck disable=SC2086
     (cd "$REPO" && uv run llm-bench quality --label "q-llamacpp-${key}-2gpu" --base-url "$L" \
-      --note "llama.cpp ${LV} ${model_path} -sm layer --fit") || log "WARNING: q-${key} にエラーあり"
+      --sets ${QUALITY_SETS:-data/quality/gsm8k-10.jsonl data/quality/mmmlu-ja-20.jsonl} \
+      --max-tokens "${QUALITY_MAX_TOKENS:-4096}" --note "llama.cpp ${LV} ${model_path} -sm layer --fit") || log "WARNING: q-${key} にエラーあり"
   fi
   "${SCRIPTS}/llamacpp.sh" down
 

@@ -1,0 +1,17 @@
+cmd: quality
+label: q-llamacpp-glm53-flash-2gpu
+sets:
+- data/quality/gsm8k-10.jsonl
+- data/quality/mmmlu-ja-20.jsonl
+api: openai
+base_url: http://127.0.0.1:18081
+model: default
+max_tokens: 4096
+timeout: 1800
+extra_body: null
+note: llama.cpp b11718 GLM-5.3-Flash-GGUF/UD-IQ1_S/GLM-5.3-Flash-UD-IQ1_S-00001-of-00003.gguf
+  -sm layer --fit
+out_dir: runs
+log: null
+func: null
+started_at: '2026-10-19T06:08:45.883324'

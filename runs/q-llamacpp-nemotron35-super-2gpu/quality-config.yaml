@@ -1,0 +1,17 @@
+cmd: quality
+label: q-llamacpp-nemotron35-super-2gpu
+sets:
+- data/quality/gsm8k-10.jsonl
+- data/quality/mmmlu-ja-20.jsonl
+api: openai
+base_url: http://127.0.0.1:18081
+model: default
+max_tokens: 4096
+timeout: 1800
+extra_body: null
+note: llama.cpp b11718 NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-GGUF/UD-Q3_K_XL/NVIDIA-Nemotron-3.5-Super-VL-120B-A12B-UD-Q3_K_XL-00001-of-00003.gguf
+  -sm layer --fit
+out_dir: runs
+log: null
+func: null
+started_at: '2026-10-19T04:12:19.835135'

@@ -1,0 +1,2 @@
+2026-10-19 06:08:45,881 INFO label=q-llamacpp-glm53-flash-2gpu api=openai base_url=http://127.0.0.1:18081 問題数=30 max_tokens=4096 extra_body=None note=llama.cpp b11718 GLM-5.3-Flash-GGUF/UD-IQ1_S/GLM-5.3-Flash-UD-IQ1_S-00001-of-00003.gguf -sm layer --fit
+2026-10-19 06:33:12,836 INFO 結果: runs/q-llamacpp-glm53-flash-2gpu

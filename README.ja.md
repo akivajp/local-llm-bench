@@ -53,15 +53,32 @@ uv run llm-bench compare runs/p2-* --markdown runs/compare.md
 | `phase1.sh` | VRAM に全部乗るモデル (Qwen3.6-35B-A3B) での基準値 |
 | `phase2.sh` | Qwen3.8-Flash-Next (125B MoE) のエンジン・GPU 構成の比較 (`QUANT=IQ2_XS` / `IQ3_S`) |
 | `phase2-extra.sh` | 入力の内容・Anthropic API による違い |
+| `phase-quality.sh` | 品質の簡易確認 (GSM8K / MMMLU 日本語、`llm-bench quality`) |
+| `phase3.sh` | 他の大きな MoE を1モデルずつ「ダウンロード → 計測 → 削除」 |
+| `phase4.sh` | ローカル LLM をバックエンドにした Claude Code に `cc-tasks/` の課題を解かせる |
 | `collect-env.sh` | 再現条件 (ドライバ・イメージのダイジェスト・モデルのリビジョン等) を Markdown で出力 |
 | `gpu-tenant.sh` | 同じ GPU を常用している別サービスのコンテナを計測中だけ止める (`scripts/local.env` で指定) |
 
 Strata の Docker イメージは各リポジトリで `docker build -t llmb-strata:upstream --build-arg CUDA_ARCHITECTURES=89 --build-arg BUILD_VISION=0 .`
 (フォークは `llmb-strata:dualgpu`) としてビルドしたもの。Linux 向けのビルド済みエンジンは配布されていない。
 
-## 計測結果
+## 計測結果 (RTX 4090 + RTX 4000 Ada, Ryzen 9 9950X3D, 96GB RAM)
 
-`runs/compare-*.md` と `runs/env-final.md` (計測環境) を参照。
+decode tok/s (短い入力 → 512 トークン生成)。いずれも VRAM 合計 44GB に乗らないモデル。
+
+| モデル / エンジン | 4090 のみ | 2GPU |
+|---|---|---|
+| Qwen3.8-Flash-Next IQ3_S / **Strata** (MTP あり) | **143** | 100 |
+| Qwen3.8-Flash-Next IQ3_S / Strata (MTP なし) | 100 | - |
+| Qwen3.8-Flash-Next IQ3_S / llama.cpp `--fit` | 41 | 41 |
+| gpt-oss-120b / llama.cpp | 34 | 39 |
+| Qwen3.5-122B-A10B UD-IQ4_XS / llama.cpp | 30 | 31 |
+| Nemotron 3.5 Super UD-Q3_K_XL / llama.cpp | 22 | 24 |
+| DeepSeek-V4-Flash UD-IQ1_S / llama.cpp | 22 | 20 |
+| GLM-5.3-Flash UD-IQ1_S / llama.cpp | 16 | 16 |
+
+詳細は `runs/compare-*.md`、品質は `runs/q-*/quality-summary.json`、Claude Code は `runs/phase4-results.jsonl`、
+計測環境は `runs/env-final.md` (フェーズ3の各モデルのリビジョンは `runs/env-p3-*.md`)。
 
 ## ライセンス
 

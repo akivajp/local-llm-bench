@@ -1,0 +1,16 @@
+2026-10-19 03:17:32,271 INFO label=p3-llamacpp-gpt-oss-120b-4090-fit api=openai base_url=http://127.0.0.1:18081 model=default
+2026-10-19 03:17:32,272 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256), ('ctx32k', 32000, 128)] extra_body={}
+2026-10-19 03:17:32,299 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 22652 MiB
+2026-10-19 03:17:32,300 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 16 MiB
+2026-10-19 03:17:32,300 INFO host RAM used: 12.0 GiB
+2026-10-19 03:17:32,300 INFO note: llama.cpp b11718 gpt-oss-120b-GGUF/gpt-oss-120b-F16.gguf -dev CUDA0 --fit
+2026-10-19 03:17:50,538 INFO short warmup: in=135 out=512 ttft=3.16s prefill=42.7 decode=33.9 finish=length
+2026-10-19 03:18:07,207 INFO short #1: in=142 out=512 ttft=1.59s prefill=89.0 decode=33.9 finish=length
+2026-10-19 03:18:23,738 INFO short #2: in=140 out=512 ttft=1.58s prefill=88.4 decode=34.2 finish=length
+2026-10-19 03:18:53,356 INFO ctx8k warmup: in=7331 out=256 ttft=22.06s prefill=332.3 decode=33.8 finish=length
+2026-10-19 03:19:23,059 INFO ctx8k #1: in=7332 out=256 ttft=22.14s prefill=331.1 decode=33.7 finish=length
+2026-10-19 03:19:52,817 INFO ctx8k #2: in=7333 out=256 ttft=22.18s prefill=330.6 decode=33.7 finish=length
+2026-10-19 03:21:17,417 INFO ctx32k warmup: in=29196 out=128 ttft=80.75s prefill=361.6 decode=33.0 finish=length
+2026-10-19 03:22:42,314 INFO ctx32k #1: in=29195 out=128 ttft=81.05s prefill=360.2 decode=33.1 finish=length
+2026-10-19 03:24:07,106 INFO ctx32k #2: in=29195 out=128 ttft=81.02s prefill=360.3 decode=33.7 finish=length
+2026-10-19 03:24:07,110 INFO 結果: runs/p3-llamacpp-gpt-oss-120b-4090-fit
