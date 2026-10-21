@@ -56,6 +56,9 @@ uv run llm-bench compare runs/p2-* --markdown runs/compare.md
 | `phase-quality.sh` | 品質の簡易確認 (GSM8K / MMMLU 日本語、`llm-bench quality`) |
 | `phase3.sh` | 他の大きな MoE を1モデルずつ「ダウンロード → 計測 → 削除」 |
 | `phase4.sh` | ローカル LLM をバックエンドにした Claude Code に `cc-tasks/` の課題を解かせる |
+| `maya.sh` | [Project Maya](https://github.com/mw00/project-maya) を CUDA ビルド用コンテナ (`docker/cuda-build.Dockerfile`) 内でセットアップ・起動 |
+| `phase5.sh` | Project Maya と llama.cpp の比較 (GLM-5.3-Flash / DeepSeek-V4.1-Flash-1017) |
+| `phase5-storage.sh` | 各 NVMe の読み込みを cgroup で絞り、RAID0 と SSD 1枚相当の帯域で比べる |
 | `collect-env.sh` | 再現条件 (ドライバ・イメージのダイジェスト・モデルのリビジョン等) を Markdown で出力 |
 | `gpu-tenant.sh` | 同じ GPU を常用している別サービスのコンテナを計測中だけ止める (`scripts/local.env` で指定) |
 
