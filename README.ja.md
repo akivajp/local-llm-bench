@@ -76,6 +76,12 @@ decode tok/s (短い入力 → 512 トークン生成)。いずれも VRAM 合�
 | Nemotron 3.5 Super UD-Q3_K_XL / llama.cpp | 22 | 24 |
 | DeepSeek-V4-Flash UD-IQ1_S / llama.cpp | 22 | 20 |
 | GLM-5.3-Flash UD-IQ1_S / llama.cpp | 16 | 16 |
+| GLM-5.3-Flash Maya-S24 / **Project Maya** (MTP) | 38 | **53** |
+| DeepSeek-V4.1-Flash-1017 (748B) Maya-S / **Project Maya** (DSpark) ※ | 19 | **22** |
+| DeepSeek-V4.1-Flash-1017 UD-IQ1_S / llama.cpp PR #30817 ※ | 13 | 16 |
+
+※ RAM に収まらず SSD から読む (256 トークン生成、`configs/slow.yaml`)。フェーズ5 (Maya と DeepSeek) のストレージは
+NVMe 3枚の btrfs RAID0、それ以前は NVMe 1枚 (`runs/NOTE-phase5.md`)。
 
 詳細は `runs/compare-*.md`、品質は `runs/q-*/quality-summary.json`、Claude Code は `runs/phase4-results.jsonl`、
 計測環境は `runs/env-final.md` (フェーズ3の各モデルのリビジョンは `runs/env-p3-*.md`)。
