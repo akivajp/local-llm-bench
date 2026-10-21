@@ -1,0 +1,13 @@
+2026-10-22 03:53:14,207 INFO label=p5-llamacpp-ds41-iq1s-2gpu api=openai base_url=http://127.0.0.1:18081 model=default
+2026-10-22 03:53:14,208 INFO warmup=1 repeats=2 scenarios=[('short', 0, 256), ('ctx8k', 8000, 128)] extra_body={}
+2026-10-22 03:53:14,231 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 22677 MiB
+2026-10-22 03:53:14,232 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 19057 MiB
+2026-10-22 03:53:14,232 INFO host RAM used: 7.4 GiB
+2026-10-22 03:53:14,233 INFO note: llama.cpp PR#30817 (b72050d03) -sm layer --fit --load-mode mmap --lazy-mode on, UD-IQ1_S
+2026-10-22 03:54:06,347 INFO short warmup: in=94 out=256 ttft=25.26s prefill=3.7 decode=9.5 finish=length
+2026-10-22 03:54:25,750 INFO short #1: in=93 out=256 ttft=2.67s prefill=34.9 decode=15.2 finish=length
+2026-10-22 03:54:43,589 INFO short #2: in=94 out=256 ttft=2.28s prefill=41.3 decode=16.4 finish=length
+2026-10-22 03:55:47,963 INFO ctx8k warmup: in=7285 out=128 ttft=54.34s prefill=134.1 decode=12.7 finish=length
+2026-10-22 03:56:45,162 INFO ctx8k #1: in=7287 out=128 ttft=49.47s prefill=147.3 decode=16.4 finish=length
+2026-10-22 03:57:41,467 INFO ctx8k #2: in=7284 out=128 ttft=48.96s prefill=148.8 decode=17.3 finish=length
+2026-10-22 03:57:41,473 INFO 結果: runs/p5-llamacpp-ds41-iq1s-2gpu

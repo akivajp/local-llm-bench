@@ -132,3 +132,20 @@ def test_extract_answer_mmmlu() -> None:
     assert extract_answer("mmmlu-ja", "答え：Ｄ（理由）") == "D"
     assert extract_answer("mmmlu-ja", "正解は B です") == "B"
     assert is_correct("mmmlu-ja", "c", "C")
+
+
+def test_nvme_read_bytes_counts_whole_disks_only(tmp_path) -> None:
+    from local_llm_bench.monitor import Sample, _rate_gbps, nvme_read_bytes
+
+    stats = tmp_path / "diskstats"
+    # 4列目以降: 読み込み完了数, マージ数, 読み込みセクタ数, ...
+    stats.write_text(
+        " 259 0 nvme0n1 10 0 2000 0 0 0 0 0 0 0 0\n"
+        " 259 1 nvme0n1p1 10 0 1000 0 0 0 0 0 0 0 0\n"
+        " 259 2 nvme1n1 10 0 4000 0 0 0 0 0 0 0 0\n"
+        "   8 0 sda 10 0 9999 0 0 0 0 0 0 0 0\n"
+    )
+    assert nvme_read_bytes(str(stats)) == (2000 + 4000) * 512
+    a = Sample(t=0.0, gpu_mem_mib=[], gpu_util=[], host_used_gib=0, disk_read_bytes=0)
+    b = Sample(t=2.0, gpu_mem_mib=[], gpu_util=[], host_used_gib=0, disk_read_bytes=4_000_000_000)
+    assert _rate_gbps(a, b) == 2.0

@@ -1,0 +1,25 @@
+# RAM に収まらず SSD から読みながら動くモデル (DeepSeek-V4.1-Flash-1017 等) 用の軽い設定。
+# 生成が数 tok/s 程度だと default.yaml (32K 入力を含む) では1構成に1時間以上かかるため、入力と出力を短くする。
+
+api: openai
+base_url: http://127.0.0.1:8080
+model: default
+api_key: dummy
+timeout: 3600
+warmup: 1
+repeats: 2
+seed: 42
+monitor_interval: 1.0
+extra_body: {}
+
+instruction: >-
+  上の資料とは無関係に、「分散システムにおけるキャッシュ設計」について、
+  具体例を交えて日本語でできるだけ詳しく、長い解説文を書いてください。
+
+scenarios:
+  - name: short
+    prompt_tokens: 0
+    max_tokens: 256
+  - name: ctx8k
+    prompt_tokens: 8000
+    max_tokens: 128

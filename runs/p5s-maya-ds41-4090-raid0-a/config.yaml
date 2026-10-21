@@ -1,0 +1,21 @@
+api: openai
+base_url: http://127.0.0.1:18083
+model: default
+api_key: dummy
+timeout: 3600
+warmup: 1
+repeats: 2
+seed: 42
+monitor_interval: 1.0
+extra_body: {}
+instruction: 上の資料とは無関係に、「分散システムにおけるキャッシュ設計」について、 具体例を交えて日本語でできるだけ詳しく、長い解説文を書いてください。
+scenarios:
+- name: short
+  prompt_tokens: 0
+  max_tokens: 256
+- name: ctx8k
+  prompt_tokens: 8000
+  max_tokens: 128
+label: p5s-maya-ds41-4090-raid0-a
+note: 'Project Maya 1.1.20 DeepSeek Maya-S --gpu 0, storage: NVMe x3 RAID0 (no limit)'
+started_at: '2026-10-22T04:01:57.763330'

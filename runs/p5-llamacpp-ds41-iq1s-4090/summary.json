@@ -1,0 +1,37 @@
+{
+  "label": "p5-llamacpp-ds41-iq1s-4090",
+  "scenarios": [
+    {
+      "scenario": "short",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 92.0,
+      "completion_tokens": 256.0,
+      "ttft_median": 3.700464847001058,
+      "prefill_tps_median": 24.862669728323255,
+      "decode_tps_median": 13.22833368128671,
+      "decode_tps_mean": 13.22833368128671
+    },
+    {
+      "scenario": "ctx8k",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 7284.5,
+      "completion_tokens": 128.0,
+      "ttft_median": 51.950695392499256,
+      "prefill_tps_median": 140.42010099693312,
+      "decode_tps_median": 14.270099187880408,
+      "decode_tps_mean": 14.270099187880408
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 22561,
+    "gpu0_util_mean": 47.04109589041096,
+    "gpu1_mem_peak_mib": 16,
+    "gpu1_util_mean": 0.0,
+    "host_used_peak_gib": 8.071319580078125,
+    "disk_read_total_gb": 220.633116672,
+    "disk_read_mean_gbps": 0.7377790920685889,
+    "disk_read_peak_gbps": 4.178442597172867
+  }
+}

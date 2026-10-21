@@ -14,6 +14,7 @@ VENV="${HOME}/llm-lab/cc-venv"          # pytest 入りの venv (課題の実行
 MODEL_NAME=qwen3.8-flash-next
 TASK_TIMEOUT="${TASK_TIMEOUT:-1500}"     # 1課題の上限秒数
 ALL=(strata-iq3s llamacpp-iq3s)
+# Maya の構成は明示したときだけ実行する (例: phase4.sh maya-glm maya-ds)
 TARGETS=("$@")
 [[ $# -eq 0 ]] && TARGETS=("${ALL[@]}")
 want() { local t; for t in "${TARGETS[@]}"; do [[ "$t" == "$1" ]] && return 0; done; return 1; }
@@ -86,6 +87,24 @@ if want llamacpp-iq3s; then
     for t in t1-fizzbuzz t2-bugfix; do run_task p4-cc-llamacpp-q38-iq3s-2gpu http://127.0.0.1:18081 "$t"; done
   fi
   "${SCRIPTS}/llamacpp.sh" down
+fi
+
+if want maya-glm; then
+  MODEL_NAME=glm-5.3-flash          # Maya の設定の model_name に合わせる
+  MAYA_RUN=run-maya-maya-s24.sh "${SCRIPTS}/maya.sh" up --gpus 0,1
+  if (cd "$REPO" && uv run llm-bench wait --base-url http://127.0.0.1:18083 --container llmb-maya --timeout 1200); then
+    for t in t1-fizzbuzz t2-bugfix; do run_task p4-cc-maya-glm53-s24-2gpu http://127.0.0.1:18083 "$t"; done
+  fi
+  "${SCRIPTS}/maya.sh" down
+fi
+
+if want maya-ds; then
+  MODEL_NAME=deepseek-v4.1-flash
+  MAYA_RUN=run-maya-ds4.sh "${SCRIPTS}/maya.sh" up --gpus 0,1
+  if (cd "$REPO" && uv run llm-bench wait --base-url http://127.0.0.1:18083 --container llmb-maya --timeout 1200); then
+    for t in t1-fizzbuzz t2-bugfix; do run_task p4-cc-maya-ds41-s-2gpu http://127.0.0.1:18083 "$t"; done
+  fi
+  "${SCRIPTS}/maya.sh" down
 fi
 
 log "phase4 done"

@@ -1,0 +1,37 @@
+{
+  "label": "p5s-maya-ds41-4090-raid0-st8-b",
+  "scenarios": [
+    {
+      "scenario": "short",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 94.0,
+      "completion_tokens": 256.0,
+      "ttft_median": 6.452469142999689,
+      "prefill_tps_median": 14.837676994951583,
+      "decode_tps_median": 16.2232990265208,
+      "decode_tps_mean": 16.2232990265208
+    },
+    {
+      "scenario": "ctx8k",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 7291.5,
+      "completion_tokens": 128.0,
+      "ttft_median": 10.013743211500696,
+      "prefill_tps_median": 728.1686727322146,
+      "decode_tps_median": 16.689566367034857,
+      "decode_tps_mean": 16.689566367034857
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23627,
+    "gpu0_util_mean": 92.68103448275862,
+    "gpu1_mem_peak_mib": 13,
+    "gpu1_util_mean": 0.0,
+    "host_used_peak_gib": 11.082462310791016,
+    "disk_read_total_gb": 433.278464,
+    "disk_read_mean_gbps": 3.569143093832258,
+    "disk_read_peak_gbps": 7.888166426576898
+  }
+}

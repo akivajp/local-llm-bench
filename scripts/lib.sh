@@ -13,6 +13,7 @@ log() { echo "$(date '+%F %T') [batch] $*" | tee -a "${BATCH_LOG:-${LOGS}/batch.
 # 計測用のサーバーをすべて止める (存在しなければ何もしない)
 stop_all_servers() {
   "${SCRIPTS}/llamacpp.sh" down >/dev/null 2>&1 || true
+  "${SCRIPTS}/maya.sh" down >/dev/null 2>&1 || true
   for c in llmb-strata llmb-strata-dual; do
     if docker inspect "$c" >/dev/null 2>&1; then
       docker logs "$c" >"${LOGS}/${c}-$(date +%Y%m%d-%H%M%S).log" 2>&1 || true

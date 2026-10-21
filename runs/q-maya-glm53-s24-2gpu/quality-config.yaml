@@ -1,0 +1,16 @@
+cmd: quality
+label: q-maya-glm53-s24-2gpu
+sets:
+- data/quality/gsm8k-10.jsonl
+- data/quality/mmmlu-ja-20.jsonl
+api: openai
+base_url: http://127.0.0.1:18083
+model: default
+max_tokens: 4096
+timeout: 1800
+extra_body: null
+note: Project Maya Maya-S24 --gpus 0,1, MTP
+out_dir: runs
+log: null
+func: null
+started_at: '2026-10-22T04:22:08.644889'

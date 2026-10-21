@@ -1,0 +1,37 @@
+{
+  "label": "p5-llamacpp-ds41-iq1s-2gpu",
+  "scenarios": [
+    {
+      "scenario": "short",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 93.5,
+      "completion_tokens": 256.0,
+      "ttft_median": 2.4719980805002706,
+      "prefill_tps_median": 38.080424784052845,
+      "decode_tps_median": 15.815833070936796,
+      "decode_tps_mean": 15.815833070936796
+    },
+    {
+      "scenario": "ctx8k",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 7285.5,
+      "completion_tokens": 128.0,
+      "ttft_median": 49.211579944501864,
+      "prefill_tps_median": 148.04822727591153,
+      "decode_tps_median": 16.86503689395108,
+      "decode_tps_mean": 16.86503689395108
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 22721,
+    "gpu0_util_mean": 43.55555555555556,
+    "gpu1_mem_peak_mib": 19095,
+    "gpu1_util_mean": 23.90038314176245,
+    "host_used_peak_gib": 8.222389221191406,
+    "disk_read_total_gb": 118.686605312,
+    "disk_read_mean_gbps": 0.4454931284740993,
+    "disk_read_peak_gbps": 3.99307987400804
+  }
+}

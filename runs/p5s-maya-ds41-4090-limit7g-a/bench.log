@@ -1,0 +1,13 @@
+2026-10-22 04:04:15,978 INFO label=p5s-maya-ds41-4090-limit7g-a api=openai base_url=http://127.0.0.1:18083 model=default
+2026-10-22 04:04:15,980 INFO warmup=1 repeats=2 scenarios=[('short', 0, 256), ('ctx8k', 8000, 128)] extra_body={}
+2026-10-22 04:04:16,001 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23551 MiB
+2026-10-22 04:04:16,001 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 13 MiB
+2026-10-22 04:04:16,002 INFO host RAM used: 10.0 GiB
+2026-10-22 04:04:16,002 INFO note: Project Maya 1.1.20 DeepSeek Maya-S --gpu 0, storage:  --device-read-bps /dev/nvme0n1:2400mb --device-read-bps /dev/nvme1n1:2400mb --device-read-bps /dev/nvme2n1:2400mb
+2026-10-22 04:04:41,111 INFO short warmup: in=94 out=256 ttft=6.17s prefill=15.2 decode=13.5 finish=length
+2026-10-22 04:05:02,658 INFO short #1: in=92 out=256 ttft=5.48s prefill=16.8 decode=15.9 finish=length
+2026-10-22 04:05:22,372 INFO short #2: in=96 out=256 ttft=5.62s prefill=17.1 decode=18.1 finish=length
+2026-10-22 04:05:40,934 INFO ctx8k warmup: in=7288 out=128 ttft=11.11s prefill=656.0 decode=17.1 finish=length
+2026-10-22 04:05:57,558 INFO ctx8k #1: in=7286 out=128 ttft=9.98s prefill=729.9 decode=19.1 finish=length
+2026-10-22 04:06:13,654 INFO ctx8k #2: in=7287 out=128 ttft=9.96s prefill=731.7 decode=20.7 finish=length
+2026-10-22 04:06:13,658 INFO 結果: runs/p5s-maya-ds41-4090-limit7g-a

@@ -1,0 +1,2 @@
+2026-10-22 04:22:08,643 INFO label=q-maya-glm53-s24-2gpu api=openai base_url=http://127.0.0.1:18083 問題数=30 max_tokens=4096 extra_body=None note=Project Maya Maya-S24 --gpus 0,1, MTP
+2026-10-22 04:24:37,347 INFO 結果: runs/q-maya-glm53-s24-2gpu

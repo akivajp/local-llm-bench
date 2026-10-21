@@ -1,0 +1,2 @@
+2026-10-22 04:25:07,038 INFO label=q-maya-ds41-s-2gpu api=openai base_url=http://127.0.0.1:18083 問題数=30 max_tokens=4096 extra_body=None note=Project Maya DeepSeek-V4.1 Maya-S --gpus 0,1, DSpark
+2026-10-22 04:41:52,679 INFO 結果: runs/q-maya-ds41-s-2gpu

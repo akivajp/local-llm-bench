@@ -374,8 +374,10 @@ def cmd_compare(args: argparse.Namespace) -> int:
         table.add_column(f"{name}\ndecode", justify="right")
     table.add_column("VRAM peak MiB", justify="right")
     table.add_column("RAM peak GiB", justify="right")
-    md = ["| label | " + " | ".join(f"{n} prefill | {n} decode" for n in scen_names) + " | VRAM peak (MiB) | RAM peak (GiB) |"]
-    md.append("|" + "---|" * (1 + 2 * len(scen_names) + 2))
+    table.add_column("disk GB/s", justify="right")
+    md = ["| label | " + " | ".join(f"{n} prefill | {n} decode" for n in scen_names)
+          + " | VRAM peak (MiB) | RAM peak (GiB) | disk read mean (GB/s) |"]
+    md.append("|" + "---|" * (1 + 2 * len(scen_names) + 3))
     for label, s in rows:
         by = {sc["scenario"]: sc for sc in s["scenarios"]}
         cells: list[str] = []
@@ -385,8 +387,9 @@ def cmd_compare(args: argparse.Namespace) -> int:
         res = s.get("resources") or {}
         vram = " / ".join(f"{res[k]:.0f}" for k in sorted(res) if k.endswith("_mem_peak_mib"))
         ram = _fmt(res.get("host_used_peak_gib"))
-        table.add_row(label, *cells, vram, ram)
-        md.append(f"| {label} | " + " | ".join(cells) + f" | {vram} | {ram} |")
+        disk = _fmt(res.get("disk_read_mean_gbps"), 2)   # 2026-10-22 以前の計測には無い
+        table.add_row(label, *cells, vram, ram, disk)
+        md.append(f"| {label} | " + " | ".join(cells) + f" | {vram} | {ram} | {disk} |")
     console.print(table)
     if args.markdown:
         Path(args.markdown).write_text("\n".join(md) + "\n", encoding="utf-8")

@@ -1,0 +1,59 @@
+diff --git a/__pycache__/fizzbuzz.cpython-312.pyc b/__pycache__/fizzbuzz.cpython-312.pyc
+new file mode 100644
+index 0000000..9b479df
+Binary files /dev/null and b/__pycache__/fizzbuzz.cpython-312.pyc differ
+diff --git a/__pycache__/test_fizzbuzz.cpython-312-pytest-9.1.1.pyc b/__pycache__/test_fizzbuzz.cpython-312-pytest-9.1.1.pyc
+new file mode 100644
+index 0000000..e9a361c
+Binary files /dev/null and b/__pycache__/test_fizzbuzz.cpython-312-pytest-9.1.1.pyc differ
+diff --git a/fizzbuzz.py b/fizzbuzz.py
+new file mode 100644
+index 0000000..741e45f
+--- /dev/null
++++ b/fizzbuzz.py
+@@ -0,0 +1,12 @@
++def fizzbuzz(n: int) -> list[str]:
++    result = []
++    for i in range(1, n + 1):
++        if i % 15 == 0:
++            result.append("FizzBuzz")
++        elif i % 3 == 0:
++            result.append("Fizz")
++        elif i % 5 == 0:
++            result.append("Buzz")
++        else:
++            result.append(str(i))
++    return result
+diff --git a/test_fizzbuzz.py b/test_fizzbuzz.py
+new file mode 100644
+index 0000000..25bb109
+--- /dev/null
++++ b/test_fizzbuzz.py
+@@ -0,0 +1,27 @@
++from fizzbuzz import fizzbuzz
++
++
++def test_basic():
++    assert fizzbuzz(15) == [
++        "1", "2", "Fizz", "4", "Buzz", "Fizz", "7", "8",
++        "Fizz", "Buzz", "11", "Fizz", "13", "14", "FizzBuzz",
++    ]
++
++
++def test_small():
++    assert fizzbuzz(1) == ["1"]
++    assert fizzbuzz(3) == ["1", "2", "Fizz"]
++    assert fizzbuzz(5) == ["1", "2", "Fizz", "4", "Buzz"]
++
++
++def test_zero_and_negative():
++    assert fizzbuzz(0) == []
++    assert fizzbuzz(-1) == []
++
++
++def test_multiples():
++    result = fizzbuzz(30)
++    assert result[14] == "FizzBuzz"   # 15
++    assert result[29] == "FizzBuzz"   # 30
++    assert result[8] == "Fizz"        # 9
++    assert result[24] == "Buzz"       # 25

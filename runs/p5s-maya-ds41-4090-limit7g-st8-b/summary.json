@@ -1,0 +1,37 @@
+{
+  "label": "p5s-maya-ds41-4090-limit7g-st8-b",
+  "scenarios": [
+    {
+      "scenario": "short",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 96.5,
+      "completion_tokens": 256.0,
+      "ttft_median": 6.399420091998763,
+      "prefill_tps_median": 15.097908331938346,
+      "decode_tps_median": 18.994223107627803,
+      "decode_tps_mean": 18.994223107627803
+    },
+    {
+      "scenario": "ctx8k",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 7289.0,
+      "completion_tokens": 128.0,
+      "ttft_median": 9.9532733549986,
+      "prefill_tps_median": 732.3219015254765,
+      "decode_tps_median": 19.169256985973714,
+      "decode_tps_mean": 19.169256985973714
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23627,
+    "gpu0_util_mean": 92.55652173913043,
+    "gpu1_mem_peak_mib": 13,
+    "gpu1_util_mean": 0.0,
+    "host_used_peak_gib": 10.870841979980469,
+    "disk_read_total_gb": 438.812123136,
+    "disk_read_mean_gbps": 3.6629319049775657,
+    "disk_read_peak_gbps": 7.560542138548792
+  }
+}

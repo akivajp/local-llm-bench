@@ -24,6 +24,16 @@ sudo -n dmidecode -t memory 2>/dev/null | grep -E "^\s+(Size|Speed|Configured Me
   || echo "(dmidecode は root 権限が必要なため未取得)"
 endsec
 
+section "ストレージ (2026-10-22 から NVMe 3枚の btrfs RAID0。それ以前のフェーズは NVMe 1枚)"
+findmnt -no SOURCE,FSTYPE,OPTIONS /
+btrfs filesystem df / 2>/dev/null
+for d in /sys/block/nvme*n1; do
+  n=$(basename "$d")
+  printf '%s %s link=%s x%s\n' "$n" "$(cat "$d/device/model" 2>/dev/null | xargs)" \
+    "$(cat "$d/device/device/current_link_speed" 2>/dev/null)" "$(cat "$d/device/device/current_link_width" 2>/dev/null)"
+done
+endsec
+
 section "GPU / ドライバ / PCIe"
 nvidia-smi --query-gpu=index,name,memory.total,driver_version,pcie.link.gen.max,pcie.link.width.max,power.limit --format=csv
 nvidia-smi | grep -E "CUDA Version"
@@ -32,7 +42,7 @@ endsec
 
 section "Docker / イメージのダイジェスト"
 docker --version
-for img in ghcr.io/ggml-org/llama.cpp:server-cuda llmb-strata:upstream llmb-strata:dualgpu; do
+for img in ghcr.io/ggml-org/llama.cpp:server-cuda llmb-strata:upstream llmb-strata:dualgpu llmb-llamacpp:deepseek41 llmb-cuda-build; do
   printf '%s  id=%s  repo_digest=%s  created=%s\n' "$img" \
     "$(docker image inspect -f '{{.Id}}' "$img" 2>/dev/null | cut -c1-19)" \
     "$(docker image inspect -f '{{join .RepoDigests ","}}' "$img" 2>/dev/null)" \
@@ -42,7 +52,7 @@ docker run --rm ghcr.io/ggml-org/llama.cpp:server-cuda --version 2>&1 | grep -E 
 endsec
 
 section "エンジンのソース (Strata は docker build 時のコミット)"
-for d in "${LAB}/strata/Strata" "${LAB}/strata/Strata-DualGPU"; do
+for d in "${LAB}/strata/Strata" "${LAB}/strata/Strata-DualGPU" "${LAB}/maya/project-maya" "${LAB}/llamacpp-src/llama.cpp"; do
   [[ -d "$d/.git" ]] && printf '%s  %s\n' "$(basename "$d")" "$(git -C "$d" log -1 --format='%H %cd' --date=iso)"
 done
 grep -m1 -oE 'VERSION *= *"[^"]+"' "${LAB}/strata/Strata/setup.py" 2>/dev/null || true

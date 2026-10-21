@@ -1,0 +1,4 @@
+ __pycache__/stats.cpython-312.pyc                   | Bin 0 -> 1341 bytes
+ __pycache__/test_stats.cpython-312-pytest-9.1.1.pyc | Bin 0 -> 4427 bytes
+ stats.py                                            |   4 ++--
+ 3 files changed, 2 insertions(+), 2 deletions(-)
