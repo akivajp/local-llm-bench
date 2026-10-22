@@ -1,0 +1,16 @@
+2026-10-22 22:36:09,156 INFO label=p6-maya-glm53-s24-2gpu-mtp-workloads api=openai base_url=http://127.0.0.1:18083 model=default
+2026-10-22 22:36:09,157 INFO warmup=1 repeats=2 scenarios=[('ja-essay', 0, 512), ('code-gen', 0, 512), ('code-read-8k', 8000, 256)] extra_body={}
+2026-10-22 22:36:09,175 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23599 MiB
+2026-10-22 22:36:09,176 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 19497 MiB
+2026-10-22 22:36:09,177 INFO host RAM used: 71.8 GiB
+2026-10-22 22:36:09,177 INFO note: draft=mtp, workloads.yaml
+2026-10-22 22:36:20,623 INFO ja-essay warmup: in=84 out=512 ttft=0.90s prefill=93.2 decode=48.5 finish=length
+2026-10-22 22:36:31,333 INFO ja-essay #1: in=84 out=512 ttft=0.66s prefill=127.1 decode=50.9 finish=length
+2026-10-22 22:36:41,825 INFO ja-essay #2: in=85 out=512 ttft=0.66s prefill=129.6 decode=52.0 finish=length
+2026-10-22 22:36:52,441 INFO code-gen warmup: in=87 out=512 ttft=0.73s prefill=119.0 decode=51.7 finish=length
+2026-10-22 22:37:02,340 INFO code-gen #1: in=89 out=512 ttft=0.72s prefill=124.0 decode=55.7 finish=length
+2026-10-22 22:37:12,203 INFO code-gen #2: in=89 out=512 ttft=0.71s prefill=125.8 decode=55.8 finish=length
+2026-10-22 22:37:26,558 INFO code-read-8k warmup: in=8076 out=256 ttft=9.40s prefill=858.9 decode=51.6 finish=length
+2026-10-22 22:37:39,185 INFO code-read-8k #1: in=8073 out=256 ttft=7.92s prefill=1019.5 decode=54.2 finish=length
+2026-10-22 22:37:51,618 INFO code-read-8k #2: in=8075 out=256 ttft=7.93s prefill=1018.3 decode=56.7 finish=length
+2026-10-22 22:37:51,622 INFO 結果: runs/p6-maya-glm53-s24-2gpu-mtp-workloads

@@ -1,0 +1,13 @@
+2026-10-23 03:22:32,946 INFO label=p6-maya-glm53-s24-4090-par4-c1 api=openai base_url=http://127.0.0.1:18083 model=default
+2026-10-23 03:22:32,947 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256)] extra_body={}
+2026-10-23 03:22:32,965 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23501 MiB
+2026-10-23 03:22:32,966 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 13 MiB
+2026-10-23 03:22:32,966 INFO host RAM used: 76.6 GiB
+2026-10-23 03:22:32,967 INFO note: Project Maya 1.1.20 Maya-S24 --gpu 0 --parallel 4, 1 requests at once
+2026-10-23 03:22:52,932 INFO short warmup: in=85 out=512 ttft=1.35s prefill=62.9 decode=27.5 finish=length
+2026-10-23 03:23:09,200 INFO short #1: in=85 out=512 ttft=1.25s prefill=67.9 decode=34.0 finish=length
+2026-10-23 03:23:25,084 INFO short #2: in=85 out=512 ttft=1.29s prefill=65.7 decode=35.0 finish=length
+2026-10-23 03:23:39,299 INFO ctx8k warmup: in=7347 out=256 ttft=5.97s prefill=1230.0 decode=31.0 finish=length
+2026-10-23 03:23:53,146 INFO ctx8k #1: in=7348 out=256 ttft=5.30s prefill=1386.3 decode=29.9 finish=length
+2026-10-23 03:24:07,071 INFO ctx8k #2: in=7348 out=256 ttft=5.39s prefill=1362.5 decode=29.9 finish=length
+2026-10-23 03:24:07,075 INFO 結果: runs/p6-maya-glm53-s24-4090-par4-c1

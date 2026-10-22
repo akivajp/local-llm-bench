@@ -1,0 +1,108 @@
+{
+  "label": "p6-maya-glm53-s24-4090-1m",
+  "scenarios": [
+    {
+      "scenario": "ctx32k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 31779.0,
+      "completion_tokens": 13.0,
+      "ttft_median": 14.845495365996612,
+      "prefill_tps_median": 2140.6493496195035,
+      "decode_tps_median": 11.502930016222416,
+      "decode_tps_mean": 11.502930016222416
+    },
+    {
+      "scenario": "ctx128k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 132182.0,
+      "completion_tokens": 13.0,
+      "ttft_median": 64.19258471399371,
+      "prefill_tps_median": 2059.1474948224804,
+      "decode_tps_median": 19.295090590042033,
+      "decode_tps_mean": 19.295090590042033
+    },
+    {
+      "scenario": "ctx256k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 266273.0,
+      "completion_tokens": 12.0,
+      "ttft_median": 128.1262629779958,
+      "prefill_tps_median": 2078.207806979661,
+      "decode_tps_median": 19.521396547204056,
+      "decode_tps_mean": 19.521396547204056
+    },
+    {
+      "scenario": "ctx512k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 525853.0,
+      "completion_tokens": 1024.0,
+      "ttft_median": 277.4739085990004,
+      "prefill_tps_median": 1895.1439530119999,
+      "decode_tps_median": 22.7117249293638,
+      "decode_tps_mean": 22.7117249293638
+    },
+    {
+      "scenario": "ctx1m",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 998529.0,
+      "completion_tokens": 13.0,
+      "ttft_median": 648.3267142969999,
+      "prefill_tps_median": 1540.1632818458438,
+      "decode_tps_median": 10.931121043291343,
+      "decode_tps_mean": 10.931121043291343
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23645,
+    "gpu0_util_mean": 98.16780821917808,
+    "gpu1_mem_peak_mib": 13,
+    "gpu1_util_mean": 0.0,
+    "host_used_peak_gib": 77.31658935546875,
+    "disk_read_total_gb": 1698.70948352,
+    "disk_read_mean_gbps": 1.438396140566345,
+    "disk_read_peak_gbps": 4.588132766326266
+  },
+  "needle": {
+    "ctx32k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        31779
+      ]
+    },
+    "ctx128k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        132182
+      ]
+    },
+    "ctx256k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        266273
+      ]
+    },
+    "ctx512k": {
+      "n": 1,
+      "found": 0,
+      "prompt_tokens": [
+        525853
+      ]
+    },
+    "ctx1m": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        998529
+      ]
+    }
+  },
+  "concurrency_rounds": []
+}

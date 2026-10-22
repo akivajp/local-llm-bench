@@ -1,0 +1,29 @@
+# 長いコンテキストの合言葉の位置を変えた確認 (512K / 約1M × 深さ 0.1 / 0.5 / 0.9)。GLM・DeepSeek 用。
+# 元の説明: prefill の速度、深い位置での decode の速度、メモリ、
+# 長文の途中に埋めた合言葉を取り出せるか (needle-in-a-haystack)。
+# 実際のトークン数は tokenizer 次第 (この詰め物は GLM で目標の約0.93倍、Qwen3.8 で約0.98倍、DeepSeek で約0.91倍)。
+# 最大のシナリオは、どのモデルでも 1,048,576 (1M) のコンテキストに収まるよう目標を 1,040,000 にしている。
+# サーバー側のコンテキスト長 (--context / --max-context) をシナリオより大きくして起動すること。
+
+api: openai
+base_url: http://127.0.0.1:8080
+model: default
+api_key: dummy
+# 1M の prefill は遅いエンジンで数十分かかる
+timeout: 7200
+# 長い入力は1回が重いので、捨て試行なしで1回ずつ
+warmup: 0
+repeats: 1
+seed: 42
+monitor_interval: 2.0
+extra_body: {}
+
+instruction: unused (needle の指示文を使う)
+
+scenarios:
+  - {name: ctx512k-d10, prompt_tokens: 552000, needle_depth: 0.1, max_tokens: 1024}
+  - {name: ctx512k-d50, prompt_tokens: 552000, needle_depth: 0.5, max_tokens: 1024}
+  - {name: ctx512k-d90, prompt_tokens: 552000, needle_depth: 0.9, max_tokens: 1024}
+  - {name: ctx1m-d10, prompt_tokens: 1040000, needle_depth: 0.1, max_tokens: 1024}
+  - {name: ctx1m-d50, prompt_tokens: 1040000, needle_depth: 0.5, max_tokens: 1024}
+  - {name: ctx1m-d90, prompt_tokens: 1040000, needle_depth: 0.9, max_tokens: 1024}

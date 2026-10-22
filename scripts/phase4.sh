@@ -14,7 +14,7 @@ VENV="${HOME}/llm-lab/cc-venv"          # pytest 入りの venv (課題の実行
 MODEL_NAME=qwen3.8-flash-next
 TASK_TIMEOUT="${TASK_TIMEOUT:-1500}"     # 1課題の上限秒数
 ALL=(strata-iq3s llamacpp-iq3s)
-# Maya の構成は明示したときだけ実行する (例: phase4.sh maya-glm maya-ds)
+# Maya の構成・長いセッション (t3) は明示したときだけ実行する (例: phase4.sh maya-glm maya-ds maya-glm-long strata-iq3s-long)
 TARGETS=("$@")
 [[ $# -eq 0 ]] && TARGETS=("${ALL[@]}")
 want() { local t; for t in "${TARGETS[@]}"; do [[ "$t" == "$1" ]] && return 0; done; return 1; }
@@ -24,8 +24,13 @@ run_task() {
   local label="$1" url="$2" task="$3"
   local dir="${WORK}/${label}/${task}" out="${REPO}/runs/${label}"
   rm -rf "$dir"; mkdir -p "$dir" "$out"
-  cp -r "${REPO}/cc-tasks/${task}/." "$dir/"
-  rm -f "$dir/prompt.txt"
+  # 準備: 課題に setup.sh があればそれで作業ディレクトリを用意する (実在のリポジトリの複製など)、無ければ中身を写す
+  if [[ -x "${REPO}/cc-tasks/${task}/setup.sh" ]]; then
+    REPO="$REPO" "${REPO}/cc-tasks/${task}/setup.sh" "$dir"
+  else
+    cp -r "${REPO}/cc-tasks/${task}/." "$dir/"
+    rm -f "$dir/prompt.txt"
+  fi
   (cd "$dir" && git init -q && git add -A && git -c user.email=bench@localhost -c user.name=bench commit -q --allow-empty -m init)
   log "claude: ${label} ${task}"
   local t0=$SECONDS rc=0
@@ -37,12 +42,15 @@ run_task() {
     CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC=1 DISABLE_TELEMETRY=1 CLAUDE_CODE_MAX_OUTPUT_TOKENS=8192 \
     timeout "$TASK_TIMEOUT" claude -p --bare --model "$MODEL_NAME" --output-format json \
       --permission-mode acceptEdits \
-      --allowedTools "Read" "Write" "Edit" "Glob" "Grep" "Bash(python3 -m pytest*)" "Bash(python3 *)" "Bash(pytest*)" "Bash(ls*)" "Bash(cat *)" \
+      --allowedTools "Read" "Write" "Edit" "Glob" "Grep" "Bash(python3 -m pytest*)" "Bash(python3 *)" "Bash(pytest*)" "Bash(ls*)" "Bash(cat *)" "Bash(uv run *)" "Bash(uv sync*)" \
       < "${REPO}/cc-tasks/${task}/prompt.txt" >"${out}/${task}.json" 2>"${out}/${task}.stderr") || rc=$?
   local wall=$((SECONDS - t0))
   # 成否はこちらで判定する (モデルの自己申告は使わない)
   local verdict
-  if (cd "$dir" && PATH="${VENV}/bin:${PATH}" python3 -m pytest -q -p no:cacheprovider >"${out}/${task}.pytest" 2>&1); then
+  # 課題に verify.sh があればそれで判定する (無ければ pytest)
+  local check=(python3 -m pytest -q -p no:cacheprovider)
+  [[ -x "${REPO}/cc-tasks/${task}/verify.sh" ]] && check=("${REPO}/cc-tasks/${task}/verify.sh")
+  if (cd "$dir" && PATH="${VENV}/bin:${PATH}" "${check[@]}" >"${out}/${task}.pytest" 2>&1); then
     verdict=pass
   else
     verdict=fail
@@ -105,6 +113,26 @@ if want maya-ds; then
     for t in t1-fizzbuzz t2-bugfix; do run_task p4-cc-maya-ds41-s-2gpu http://127.0.0.1:18083 "$t"; done
   fi
   "${SCRIPTS}/maya.sh" down
+fi
+
+if want maya-glm-long; then
+  # 実在のリポジトリでの長めの作業 (t3)。Claude Code は窓長を 200K と見なすので、サーバーは 1M で起動しておく
+  MODEL_NAME=glm-5.3-flash
+  MAYA_DOCKER_ENV="MAYA_GLM_RAM_HEADROOM_GB=14 STRATA_GLM_RAM_HEADROOM_GB=14" \
+    MAYA_CONFIG=maya-maya-s24-ctx1048576.json "${SCRIPTS}/maya.sh" up --gpus 0,1
+  if (cd "$REPO" && uv run llm-bench wait --base-url http://127.0.0.1:18083 --container llmb-maya --timeout 1200); then
+    TASK_TIMEOUT=3600 run_task p4-cc-maya-glm53-s24-2gpu-1m http://127.0.0.1:18083 t3-feature
+  fi
+  "${SCRIPTS}/maya.sh" down
+fi
+
+if want strata-iq3s-long; then
+  MODEL_NAME=qwen3.8-flash-next
+  STRATA_MODEL=IQ3_S STRATA_VARIANT=upstream "${SCRIPTS}/strata.sh" up GPU=0 CONFIG=/data/config/strata-iq3_s-ctx1048576.json
+  if (cd "$REPO" && uv run llm-bench wait --base-url http://127.0.0.1:18080 --container llmb-strata --timeout 1200); then
+    TASK_TIMEOUT=3600 run_task p4-cc-strata-q38-iq3s-4090-1m http://127.0.0.1:18080 t3-feature
+  fi
+  STRATA_MODEL=IQ3_S STRATA_VARIANT=upstream "${SCRIPTS}/strata.sh" down
 fi
 
 log "phase4 done"

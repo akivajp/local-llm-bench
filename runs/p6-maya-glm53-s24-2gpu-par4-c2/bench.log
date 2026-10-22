@@ -1,0 +1,23 @@
+2026-10-23 03:16:13,999 INFO label=p6-maya-glm53-s24-2gpu-par4-c2 api=openai base_url=http://127.0.0.1:18083 model=default
+2026-10-23 03:16:14,001 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256)] extra_body={}
+2026-10-23 03:16:14,019 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23785 MiB
+2026-10-23 03:16:14,019 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 19449 MiB
+2026-10-23 03:16:14,020 INFO host RAM used: 76.7 GiB
+2026-10-23 03:16:14,020 INFO note: Project Maya 1.1.20 Maya-S24 --gpus 0,1 --parallel 4, 2 requests at once
+2026-10-23 03:16:32,592 INFO short warmup: in=84 out=512 ttft=0.82s prefill=103.0 decode=29.5 finish=length
+2026-10-23 03:16:32,593 INFO short warmup: in=86 out=512 ttft=1.70s prefill=50.7 decode=30.3 finish=length
+2026-10-23 03:16:50,578 INFO short #1: in=84 out=512 ttft=1.74s prefill=48.4 decode=31.5 finish=length
+2026-10-23 03:16:50,579 INFO short #1: in=84 out=512 ttft=0.90s prefill=93.8 decode=30.6 finish=length
+2026-10-23 03:16:50,579 INFO short #1: 同時 2 件の合計 decode 57.0 tok/s
+2026-10-23 03:17:08,553 INFO short #2: in=83 out=512 ttft=1.50s prefill=55.4 decode=31.0 finish=length
+2026-10-23 03:17:08,554 INFO short #2: in=85 out=512 ttft=0.79s prefill=108.3 decode=30.3 finish=length
+2026-10-23 03:17:08,554 INFO short #2: 同時 2 件の合計 decode 57.0 tok/s
+2026-10-23 03:17:30,199 INFO ctx8k warmup: in=7350 out=256 ttft=7.39s prefill=994.8 decode=18.2 finish=length
+2026-10-23 03:17:30,200 INFO ctx8k warmup: in=7350 out=256 ttft=13.54s prefill=542.8 decode=31.5 finish=length
+2026-10-23 03:17:51,347 INFO ctx8k #1: in=7347 out=256 ttft=6.48s prefill=1134.1 decode=17.6 finish=length
+2026-10-23 03:17:51,348 INFO ctx8k #1: in=7350 out=256 ttft=12.68s prefill=579.5 decode=30.1 finish=length
+2026-10-23 03:17:51,348 INFO ctx8k #1: 同時 2 件の合計 decode 24.2 tok/s
+2026-10-23 03:18:12,700 INFO ctx8k #2: in=7346 out=256 ttft=6.61s prefill=1110.8 decode=17.5 finish=length
+2026-10-23 03:18:12,701 INFO ctx8k #2: in=7348 out=256 ttft=12.97s prefill=566.7 decode=30.4 finish=length
+2026-10-23 03:18:12,702 INFO ctx8k #2: 同時 2 件の合計 decode 24.0 tok/s
+2026-10-23 03:18:12,705 INFO 結果: runs/p6-maya-glm53-s24-2gpu-par4-c2

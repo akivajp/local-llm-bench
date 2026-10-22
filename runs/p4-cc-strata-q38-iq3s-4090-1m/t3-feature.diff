@@ -1,0 +1,186 @@
+diff --git a/README.ja.md b/README.ja.md
+index 6896e75..9a62432 100644
+--- a/README.ja.md
++++ b/README.ja.md
+@@ -27,8 +27,8 @@ uv run llm-bench wait --base-url http://127.0.0.1:18081 --container llmb-llamacp
+ uv run llm-bench run --label my-run --base-url http://127.0.0.1:18081 --note "起動オプション等"
+ # Anthropic API 経由で計測
+ uv run llm-bench run --label my-run-anthropic --api anthropic --base-url http://127.0.0.1:18081
+-# 比較表 (Markdown 出力も可)
+-uv run llm-bench compare runs/p2-* --markdown runs/compare.md
++# 比較表 (Markdown / CSV 出力も可)
++uv run llm-bench compare runs/p2-* --markdown runs/compare.md --csv runs/compare.csv
+ ```
+ 
+ 結果は `runs/<label>/` に保存される:
+diff --git a/src/local_llm_bench/cli.py b/src/local_llm_bench/cli.py
+index db48bc0..610f6e3 100644
+--- a/src/local_llm_bench/cli.py
++++ b/src/local_llm_bench/cli.py
+@@ -9,6 +9,7 @@
+ from __future__ import annotations
+ 
+ import argparse
++import csv
+ import json
+ import logging
+ import subprocess
+@@ -427,7 +428,7 @@ def _container_running(name: str) -> bool:
+ 
+ 
+ def cmd_compare(args: argparse.Namespace) -> int:
+-    """複数ラベルの summary.json を並べて表示する。"""
++    """複数ラベルの summary.json を並べて表示する (--markdown / --csv でファイル出力)。"""
+     rows: list[tuple[str, dict[str, Any]]] = []
+     for d in args.run_dirs:
+         p = Path(d) / "summary.json"
+@@ -449,9 +450,12 @@ def cmd_compare(args: argparse.Namespace) -> int:
+     table.add_column("VRAM peak MiB", justify="right")
+     table.add_column("RAM peak GiB", justify="right")
+     table.add_column("disk GB/s", justify="right")
+-    md = ["| label | " + " | ".join(f"{n} prefill | {n} decode" for n in scen_names)
+-          + " | VRAM peak (MiB) | RAM peak (GiB) | disk read mean (GB/s) |"]
+-    md.append("|" + "---|" * (1 + 2 * len(scen_names) + 3))
++    # 表の中身は表示・Markdown・CSV で共通にする (1回だけ組み立てる)
++    header = ["label"]
++    for name in scen_names:
++        header += [f"{name} prefill", f"{name} decode"]
++    header += ["VRAM peak (MiB)", "RAM peak (GiB)", "disk read mean (GB/s)"]
++    data: list[list[str]] = []
+     for label, s in rows:
+         by = {sc["scenario"]: sc for sc in s["scenarios"]}
+         cells: list[str] = []
+@@ -463,11 +467,23 @@ def cmd_compare(args: argparse.Namespace) -> int:
+         ram = _fmt(res.get("host_used_peak_gib"))
+         disk = _fmt(res.get("disk_read_mean_gbps"), 2)   # 2026-10-22 以前の計測には無い
+         table.add_row(label, *cells, vram, ram, disk)
+-        md.append(f"| {label} | " + " | ".join(cells) + f" | {vram} | {ram} | {disk} |")
++        data.append([label, *cells, vram, ram, disk])
+     console.print(table)
+     if args.markdown:
++        md = ["| label | " + " | ".join(f"{n} prefill | {n} decode" for n in scen_names)
++              + " | VRAM peak (MiB) | RAM peak (GiB) | disk read mean (GB/s) |",
++              "|" + "---|" * (1 + 2 * len(scen_names) + 3)]
++        md += ["| " + " | ".join(r) + " |" for r in data]
+         Path(args.markdown).write_text("\n".join(md) + "\n", encoding="utf-8")
+         console.print(f"Markdown: {args.markdown}")
++    if args.csv:
++        csv_path = Path(args.csv)
++        csv_path.parent.mkdir(parents=True, exist_ok=True)
++        with csv_path.open("w", encoding="utf-8", newline="") as f:
++            w = csv.writer(f)
++            w.writerow(header)
++            w.writerows(data)
++        console.print(f"CSV: {csv_path}")
+     return 0
+ 
+ 
+@@ -530,6 +546,7 @@ def build_parser() -> argparse.ArgumentParser:
+     c = sub.add_parser("compare", help="複数の結果を比較表にする")
+     c.add_argument("run_dirs", nargs="+", help="runs/<label> ディレクトリ")
+     c.add_argument("--markdown", help="Markdown 表の出力先")
++    c.add_argument("--csv", help="CSV 表の出力先 (--markdown と同じ内容)")
+     c.set_defaults(func=cmd_compare)
+     return p
+ 
+diff --git a/tests/test_compare_csv.py b/tests/test_compare_csv.py
+new file mode 100644
+index 0000000..859b5d4
+--- /dev/null
++++ b/tests/test_compare_csv.py
+@@ -0,0 +1,95 @@
++"""compare コマンドの --csv (比較表の CSV 出力) のテスト。"""
++
++from __future__ import annotations
++
++import csv
++import json
++from pathlib import Path
++from typing import Any
++
++from local_llm_bench.cli import main
++
++_CSV_HEADER = [
++    "label",
++    "short prefill",
++    "short decode",
++    "ctx8k prefill",
++    "ctx8k decode",
++    "VRAM peak (MiB)",
++    "RAM peak (GiB)",
++    "disk read mean (GB/s)",
++]
++
++# (シナリオ名, prefill 中央値, decode 中央値) の並び
++_ScenRows = list[tuple[str, float | None, float | None]]
++
++
++def _make_run(run_dir: Path, scenarios: _ScenRows, resources: dict[str, float]) -> Path:
++    """runs/<label>/summary.json と同じ形の中身を書いたディレクトリを作る。"""
++    records: list[dict[str, Any]] = []
++    for name, prefill, decode in scenarios:
++        records.append(
++            dict(
++                scenario=name,
++                n_ok=3,
++                n_err=0,
++                prompt_tokens=100.0,
++                completion_tokens=512.0,
++                ttft_median=0.5,
++                prefill_tps_median=prefill,
++                decode_tps_median=decode,
++                decode_tps_mean=decode,
++            )
++        )
++    summary = dict(label=run_dir.name, scenarios=records, resources=resources)
++    run_dir.mkdir(parents=True, exist_ok=True)
++    (run_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False), encoding="utf-8")
++    return run_dir
++
++
++def _read_csv(path: Path) -> list[list[str]]:
++    with path.open(encoding="utf-8", newline="") as f:
++        return list(csv.reader(f))
++
++
++def _md_cells(line: str) -> list[str]:
++    """Markdown 表の1行をセルに分割する。"""
++    return [c.strip() for c in line.strip().strip("|").split("|")]
++
++
++def test_compare_csv_header_and_rows(tmp_path: Path) -> None:
++    res_a = dict(
++        gpu0_mem_peak_mib=20000.0,
++        gpu1_mem_peak_mib=10000.0,
++        gpu0_util_mean=99.0,
++        host_used_peak_gib=40.5,
++        disk_read_mean_gbps=1.234,
++    )
++    a = _make_run(tmp_path / "run-a", [("short", 1200.0, 40.0), ("ctx8k", 600.5, 30.5)], res_a)
++    # ctx8k を走らせておらず、disk_read_mean_gbps も無い (古い計測) ラベル
++    b = _make_run(tmp_path / "run-b", [("short", 900.0, 35.0)], dict(host_used_peak_gib=30.0))
++    out = tmp_path / "compare.csv"
++
++    assert main(["compare", str(a), str(b), "--csv", str(out)]) == 0
++
++    rows = _read_csv(out)
++    assert rows[0] == _CSV_HEADER
++    assert len(rows) == 3  # ヘッダー + ラベル2行
++    assert rows[1] == ["run-a", "1200.0", "40.0", "600.5", "30.5", "20000 / 10000", "40.5", "1.23"]
++    assert rows[2] == ["run-b", "900.0", "35.0", "-", "-", "", "30.0", "-"]
++
++
++def test_compare_csv_matches_markdown(tmp_path: Path) -> None:
++    a = _make_run(tmp_path / "run-a", [("short", 1200.0, 40.0)], dict(host_used_peak_gib=40.5))
++    b = _make_run(tmp_path / "run-b", [("short", 900.0, 35.0)], dict(host_used_peak_gib=30.0))
++    out_csv = tmp_path / "sub" / "compare.csv"   # 親ディレクトリが無くても書き出せる
++    out_md = tmp_path / "compare.md"
++
++    assert main(["compare", str(a), str(b), "--csv", str(out_csv), "--markdown", str(out_md)]) == 0
++
++    rows = _read_csv(out_csv)
++    md = out_md.read_text(encoding="utf-8").splitlines()
++    assert rows[0] == ["label", "short prefill", "short decode",
++                       "VRAM peak (MiB)", "RAM peak (GiB)", "disk read mean (GB/s)"]
++    assert _md_cells(md[0]) == rows[0]                       # ヘッダーは共通
++    assert [_md_cells(line) for line in md[2:]] == rows[1:]  # 2行目は Markdown の区切り行

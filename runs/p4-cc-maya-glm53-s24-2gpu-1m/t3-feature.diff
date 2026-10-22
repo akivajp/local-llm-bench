@@ -1,0 +1,93 @@
+diff --git a/src/local_llm_bench/cli.py b/src/local_llm_bench/cli.py
+index db48bc0..c5d32b2 100644
+--- a/src/local_llm_bench/cli.py
++++ b/src/local_llm_bench/cli.py
+@@ -9,6 +9,7 @@
+ from __future__ import annotations
+ 
+ import argparse
++import csv
+ import json
+ import logging
+ import subprocess
+@@ -452,6 +453,11 @@ def cmd_compare(args: argparse.Namespace) -> int:
+     md = ["| label | " + " | ".join(f"{n} prefill | {n} decode" for n in scen_names)
+           + " | VRAM peak (MiB) | RAM peak (GiB) | disk read mean (GB/s) |"]
+     md.append("|" + "---|" * (1 + 2 * len(scen_names) + 3))
++    csv_header = ["label"]
++    for n in scen_names:
++        csv_header += [f"{n} prefill", f"{n} decode"]
++    csv_header += ["VRAM peak (MiB)", "RAM peak (GiB)", "disk read mean (GB/s)"]
++    csv_rows: list[list[str]] = []
+     for label, s in rows:
+         by = {sc["scenario"]: sc for sc in s["scenarios"]}
+         cells: list[str] = []
+@@ -464,10 +470,17 @@ def cmd_compare(args: argparse.Namespace) -> int:
+         disk = _fmt(res.get("disk_read_mean_gbps"), 2)   # 2026-10-22 以前の計測には無い
+         table.add_row(label, *cells, vram, ram, disk)
+         md.append(f"| {label} | " + " | ".join(cells) + f" | {vram} | {ram} | {disk} |")
++        csv_rows.append([label, *cells, vram, ram, disk])
+     console.print(table)
+     if args.markdown:
+         Path(args.markdown).write_text("\n".join(md) + "\n", encoding="utf-8")
+         console.print(f"Markdown: {args.markdown}")
++    if args.csv:
++        with open(args.csv, "w", encoding="utf-8", newline="") as f:
++            w = csv.writer(f)
++            w.writerow(csv_header)
++            w.writerows(csv_rows)
++        console.print(f"CSV: {args.csv}")
+     return 0
+ 
+ 
+@@ -530,6 +543,7 @@ def build_parser() -> argparse.ArgumentParser:
+     c = sub.add_parser("compare", help="複数の結果を比較表にする")
+     c.add_argument("run_dirs", nargs="+", help="runs/<label> ディレクトリ")
+     c.add_argument("--markdown", help="Markdown 表の出力先")
++    c.add_argument("--csv", help="CSV 表の出力先")
+     c.set_defaults(func=cmd_compare)
+     return p
+ 
+diff --git a/tests/test_compare_csv.py b/tests/test_compare_csv.py
+new file mode 100644
+index 0000000..461a840
+--- /dev/null
++++ b/tests/test_compare_csv.py
+@@ -0,0 +1,37 @@
++"""compare コマンドの --csv オプションのテスト。"""
++
++from __future__ import annotations
++
++import csv
++import json
++
++from local_llm_bench.cli import main
++
++
++def test_compare_writes_csv(tmp_path) -> None:
++    # ラベルごとの runs/<label>/summary.json を2つ用意する
++    for label, prefill in (("aaa", 100.0), ("bbb", 200.5)):
++        d = tmp_path / label
++        d.mkdir()
++        (d / "summary.json").write_text(
++            json.dumps(dict(
++                label=label,
++                scenarios=[dict(scenario="s1", prefill_tps_median=prefill, decode_tps_median=10.0)],
++                resources=dict(gpu0_mem_peak_mib=1234.0, host_used_peak_gib=5.6,
++                               disk_read_mean_gbps=1.5),
++            )),
++            encoding="utf-8",
++        )
++
++    out = tmp_path / "cmp.csv"
++    assert main(["compare", str(tmp_path / "aaa"), str(tmp_path / "bbb"), "--csv", str(out)]) == 0
++
++    with open(out, encoding="utf-8", newline="") as f:
++        rows = list(csv.reader(f))
++    # ヘッダー: label + シナリオごとの prefill/decode + 3列のピーク値
++    assert rows[0] == ["label", "s1 prefill", "s1 decode",
++                       "VRAM peak (MiB)", "RAM peak (GiB)", "disk read mean (GB/s)"]
++    # ヘッダー + データ2行
++    assert len(rows) == 3
++    assert rows[1][0] == "aaa" and rows[1][1] == "100.0"
++    assert rows[2][0] == "bbb" and rows[2][1] == "200.5"

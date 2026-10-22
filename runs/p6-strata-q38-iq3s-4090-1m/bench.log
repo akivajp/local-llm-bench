@@ -1,0 +1,12 @@
+2026-10-22 23:04:41,558 INFO label=p6-strata-q38-iq3s-4090-1m api=openai base_url=http://127.0.0.1:18080 model=default
+2026-10-22 23:04:41,560 INFO warmup=0 repeats=1 scenarios=[('ctx32k', 34000, 1024), ('ctx128k', 138000, 1024), ('ctx256k', 276000, 1024), ('ctx512k', 552000, 1024), ('ctx1m', 1040000, 1024)] extra_body={}
+2026-10-22 23:04:41,579 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23655 MiB
+2026-10-22 23:04:41,580 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 13 MiB
+2026-10-22 23:04:41,581 INFO host RAM used: 72.8 GiB
+2026-10-22 23:04:41,582 INFO note: Strata (docker) IQ3_S GPU=0 --max-context 1048576 --rope-scaling yarn --rope-scale 4, MTP
+2026-10-22 23:04:59,852 INFO ctx32k #1: in=33599 out=243 ttft=16.06s prefill=2092.4 decode=110.4 finish=stop needle=OK
+2026-10-22 23:06:02,252 INFO ctx128k #1: in=139271 out=241 ttft=60.44s prefill=2304.3 decode=123.7 finish=stop needle=OK
+2026-10-22 23:08:13,517 INFO ctx256k #1: in=280047 out=252 ttft=129.25s prefill=2166.7 decode=126.6 finish=stop needle=OK
+2026-10-22 23:12:58,765 INFO ctx512k #1: in=571074 out=270 ttft=282.72s prefill=2020.0 decode=109.9 finish=stop needle=OK
+2026-10-22 23:12:59,194 ERROR ctx1m #1: HTTP 400: {"error": {"type": "invalid_request_error", "message": "request exceeds the context window: prompt (1085456 tokens) + max tokens (1024) exceeds the context (1048576); requests are never truncated. Send a smaller max_tokens (at most 0 here), or add \"fit_max_tokens\": true to the model's strata-<model>.json to shorten it to the room left (#545)"}}
+2026-10-22 23:12:59,198 INFO 結果: runs/p6-strata-q38-iq3s-4090-1m

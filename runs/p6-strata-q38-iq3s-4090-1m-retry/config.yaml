@@ -1,0 +1,19 @@
+api: openai
+base_url: http://127.0.0.1:18080
+model: default
+api_key: dummy
+timeout: 7200
+warmup: 0
+repeats: 1
+seed: 42
+monitor_interval: 2.0
+extra_body: {}
+instruction: unused (needle の指示文を使う)
+scenarios:
+- name: ctx1m
+  prompt_tokens: 960000
+  needle_depth: 0.5
+  max_tokens: 1024
+label: p6-strata-q38-iq3s-4090-1m-retry
+note: Strata IQ3_S GPU=0 --max-context 1048576 YaRN x4, 1M target lowered to 960000
+started_at: '2026-10-23T01:44:19.628855'

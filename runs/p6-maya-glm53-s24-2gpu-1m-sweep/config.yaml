@@ -1,0 +1,40 @@
+api: openai
+base_url: http://127.0.0.1:18083
+model: default
+api_key: dummy
+timeout: 7200
+warmup: 0
+repeats: 1
+seed: 42
+monitor_interval: 2.0
+extra_body: {}
+instruction: unused (needle の指示文を使う)
+scenarios:
+- name: ctx512k-d10
+  prompt_tokens: 552000
+  needle_depth: 0.1
+  max_tokens: 1024
+- name: ctx512k-d50
+  prompt_tokens: 552000
+  needle_depth: 0.5
+  max_tokens: 1024
+- name: ctx512k-d90
+  prompt_tokens: 552000
+  needle_depth: 0.9
+  max_tokens: 1024
+- name: ctx1m-d10
+  prompt_tokens: 1040000
+  needle_depth: 0.1
+  max_tokens: 1024
+- name: ctx1m-d50
+  prompt_tokens: 1040000
+  needle_depth: 0.5
+  max_tokens: 1024
+- name: ctx1m-d90
+  prompt_tokens: 1040000
+  needle_depth: 0.9
+  max_tokens: 1024
+label: p6-maya-glm53-s24-2gpu-1m-sweep
+note: Project Maya 1.1.20 Maya-S24 --gpus 0,1 --max-context 1048576, RAM headroom
+  14GB, needle depth sweep
+started_at: '2026-10-23T00:42:29.104862'

@@ -1,0 +1,13 @@
+2026-10-23 01:53:54,921 INFO label=p6-strata-q38-iq3s-4090-1m-sweep api=openai base_url=http://127.0.0.1:18080 model=default
+2026-10-23 01:53:54,922 INFO warmup=0 repeats=1 scenarios=[('ctx512k-d10', 530000, 1024), ('ctx512k-d50', 530000, 1024), ('ctx512k-d90', 530000, 1024), ('ctx1m-d10', 960000, 1024), ('ctx1m-d50', 960000, 1024), ('ctx1m-d90', 960000, 1024)] extra_body={}
+2026-10-23 01:53:54,942 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23783 MiB
+2026-10-23 01:53:54,943 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 13 MiB
+2026-10-23 01:53:54,943 INFO host RAM used: 73.9 GiB
+2026-10-23 01:53:54,943 INFO note: Strata IQ3_S GPU=0 --max-context 1048576 YaRN x4, needle depth sweep
+2026-10-23 01:58:27,305 INFO ctx512k-d10 #1: in=547843 out=298 ttft=269.39s prefill=2033.7 decode=102.2 finish=stop needle=OK
+2026-10-23 02:02:58,594 INFO ctx512k-d50 #1: in=547846 out=256 ttft=269.02s prefill=2036.5 decode=117.0 finish=stop needle=OK
+2026-10-23 02:07:30,267 INFO ctx512k-d90 #1: in=547845 out=278 ttft=268.87s prefill=2037.6 decode=100.6 finish=stop needle=OK
+2026-10-23 02:17:04,145 INFO ctx1m-d10 #1: in=1001153 out=185 ttft=571.75s prefill=1751.0 decode=91.6 finish=stop needle=OK
+2026-10-23 02:26:37,059 INFO ctx1m-d50 #1: in=1001152 out=136 ttft=571.54s prefill=1751.7 decode=105.4 finish=stop needle=OK
+2026-10-23 02:36:12,450 INFO ctx1m-d90 #1: in=1001155 out=261 ttft=572.85s prefill=1747.7 decode=107.3 finish=stop needle=OK
+2026-10-23 02:36:12,457 INFO 結果: runs/p6-strata-q38-iq3s-4090-1m-sweep

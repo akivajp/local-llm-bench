@@ -1,0 +1,16 @@
+2026-10-22 22:38:20,449 INFO label=p6-maya-glm53-s24-2gpu-dflash2 api=openai base_url=http://127.0.0.1:18083 model=default
+2026-10-22 22:38:20,450 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256), ('ctx32k', 32000, 128)] extra_body={}
+2026-10-22 22:38:20,469 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23491 MiB
+2026-10-22 22:38:20,470 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 19427 MiB
+2026-10-22 22:38:20,471 INFO host RAM used: 69.6 GiB
+2026-10-22 22:38:20,471 INFO note: Project Maya 1.1.20 Maya-S24 --gpus 0,1, draft=dflash2, after --calibrate (engine defaults kept)
+2026-10-22 22:38:36,696 INFO short warmup: in=83 out=512 ttft=0.71s prefill=116.6 decode=33.0 finish=length
+2026-10-22 22:38:52,504 INFO short #1: in=83 out=512 ttft=0.63s prefill=131.7 decode=33.7 finish=length
+2026-10-22 22:39:08,708 INFO short #2: in=85 out=512 ttft=0.63s prefill=133.9 decode=32.8 finish=length
+2026-10-22 22:39:23,594 INFO ctx8k warmup: in=7348 out=256 ttft=7.03s prefill=1045.2 decode=32.5 finish=length
+2026-10-22 22:39:38,214 INFO ctx8k #1: in=7349 out=256 ttft=6.23s prefill=1179.7 decode=30.4 finish=length
+2026-10-22 22:39:52,533 INFO ctx8k #2: in=7350 out=256 ttft=6.34s prefill=1158.9 decode=32.0 finish=length
+2026-10-22 22:40:15,170 INFO ctx32k warmup: in=29869 out=128 ttft=18.67s prefill=1599.8 decode=32.1 finish=length
+2026-10-22 22:40:37,845 INFO ctx32k #1: in=29868 out=128 ttft=18.89s prefill=1580.9 decode=33.6 finish=length
+2026-10-22 22:41:00,294 INFO ctx32k #2: in=29870 out=128 ttft=18.78s prefill=1590.5 decode=34.7 finish=length
+2026-10-22 22:41:00,298 INFO 結果: runs/p6-maya-glm53-s24-2gpu-dflash2

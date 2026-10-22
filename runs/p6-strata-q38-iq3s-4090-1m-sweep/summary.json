@@ -1,0 +1,126 @@
+{
+  "label": "p6-strata-q38-iq3s-4090-1m-sweep",
+  "scenarios": [
+    {
+      "scenario": "ctx512k-d10",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 547843.0,
+      "completion_tokens": 298.0,
+      "ttft_median": 269.3879461930046,
+      "prefill_tps_median": 2033.658178630957,
+      "decode_tps_median": 102.22098989967245,
+      "decode_tps_mean": 102.22098989967245
+    },
+    {
+      "scenario": "ctx512k-d50",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 547846.0,
+      "completion_tokens": 256.0,
+      "ttft_median": 269.0154563450051,
+      "prefill_tps_median": 2036.48521703304,
+      "decode_tps_median": 117.02553402600853,
+      "decode_tps_mean": 117.02553402600853
+    },
+    {
+      "scenario": "ctx512k-d90",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 547845.0,
+      "completion_tokens": 278.0,
+      "ttft_median": 268.867310763002,
+      "prefill_tps_median": 2037.6035987614275,
+      "decode_tps_median": 100.5703437137437,
+      "decode_tps_mean": 100.5703437137437
+    },
+    {
+      "scenario": "ctx1m-d10",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 1001153.0,
+      "completion_tokens": 185.0,
+      "ttft_median": 571.7453335890023,
+      "prefill_tps_median": 1751.0470854488449,
+      "decode_tps_median": 91.60477007494647,
+      "decode_tps_mean": 91.60477007494647
+    },
+    {
+      "scenario": "ctx1m-d50",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 1001152.0,
+      "completion_tokens": 136.0,
+      "ttft_median": 571.5372954720078,
+      "prefill_tps_median": 1751.682712452198,
+      "decode_tps_median": 105.36183424402815,
+      "decode_tps_mean": 105.36183424402815
+    },
+    {
+      "scenario": "ctx1m-d90",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 1001155.0,
+      "completion_tokens": 261.0,
+      "ttft_median": 572.845347733004,
+      "prefill_tps_median": 1747.6881045852986,
+      "decode_tps_median": 107.33378646318288,
+      "decode_tps_mean": 107.33378646318288
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23783,
+    "gpu0_util_mean": 99.72328548644339,
+    "gpu1_mem_peak_mib": 13,
+    "gpu1_util_mean": 0.0,
+    "host_used_peak_gib": 74.33723831176758,
+    "disk_read_total_gb": 12.70665216,
+    "disk_read_mean_gbps": 0.005007962235937999,
+    "disk_read_peak_gbps": 0.05209551088635555
+  },
+  "needle": {
+    "ctx512k-d10": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        547843
+      ]
+    },
+    "ctx512k-d50": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        547846
+      ]
+    },
+    "ctx512k-d90": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        547845
+      ]
+    },
+    "ctx1m-d10": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        1001153
+      ]
+    },
+    "ctx1m-d50": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        1001152
+      ]
+    },
+    "ctx1m-d90": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        1001155
+      ]
+    }
+  },
+  "concurrency_rounds": []
+}

@@ -1,0 +1,76 @@
+{
+  "label": "p6-maya-glm53-s24-2gpu-par4-c4",
+  "scenarios": [
+    {
+      "scenario": "short",
+      "n_ok": 8,
+      "n_err": 0,
+      "prompt_tokens": 83.75,
+      "completion_tokens": 512.0,
+      "ttft_median": 1.8895137440049439,
+      "prefill_tps_median": 46.46937410455948,
+      "decode_tps_median": 15.629371710077574,
+      "decode_tps_mean": 15.61777764704641
+    },
+    {
+      "scenario": "ctx8k",
+      "n_ok": 8,
+      "n_err": 0,
+      "prompt_tokens": 7350.25,
+      "completion_tokens": 256.0,
+      "ttft_median": 16.141135686499183,
+      "prefill_tps_median": 473.70942011619786,
+      "decode_tps_median": 10.134103817146057,
+      "decode_tps_mean": 10.809726311919697
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23785,
+    "gpu0_util_mean": 78.7070938215103,
+    "gpu1_mem_peak_mib": 19449,
+    "gpu1_util_mean": 73.4599542334096,
+    "host_used_peak_gib": 76.97359848022461,
+    "disk_read_total_gb": 0.027987968,
+    "disk_read_mean_gbps": 0.00012136081256127086,
+    "disk_read_peak_gbps": 0.014548020114324675
+  },
+  "needle": {},
+  "concurrency_rounds": [
+    {
+      "scenario": "short",
+      "concurrency": 4,
+      "n_ok": 4,
+      "completion_tokens": 2048,
+      "wall_s": 35.49946189898765,
+      "aggregate_tps": 57.691015312499815,
+      "per_request_decode_tps_mean": 15.342379259466984
+    },
+    {
+      "scenario": "short",
+      "concurrency": 4,
+      "n_ok": 4,
+      "completion_tokens": 2048,
+      "wall_s": 34.311253302992554,
+      "aggregate_tps": 59.68887180875371,
+      "per_request_decode_tps_mean": 15.893176034625835
+    },
+    {
+      "scenario": "ctx8k",
+      "concurrency": 4,
+      "n_ok": 4,
+      "completion_tokens": 1024,
+      "wall_s": 41.956723170005716,
+      "aggregate_tps": 24.406100444279772,
+      "per_request_decode_tps_mean": 10.784030995641986
+    },
+    {
+      "scenario": "ctx8k",
+      "concurrency": 4,
+      "n_ok": 4,
+      "completion_tokens": 1024,
+      "wall_s": 41.86859629000537,
+      "aggregate_tps": 24.457471487871288,
+      "per_request_decode_tps_mean": 10.835421628197407
+    }
+  ]
+}

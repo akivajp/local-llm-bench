@@ -5,3 +5,5 @@ Claude Code (`claude -p --bare`) に `prompt.txt` を渡して解かせる。終
 
 - t1-fizzbuzz: 新規にファイルを作り、テストも書いて通す
 - t2-bugfix: 既存コードの2箇所のバグ (mean の分母、偶数個の median の添字) を、テストを変えずに直す
+- t3-feature: 実在のリポジトリ (この計測ツール自身の複製) に `llm-bench compare --csv` を追加し、テストも書く。
+  `setup.sh` で作業ディレクトリを用意し、`verify.sh` で判定する (全テスト・CSV の出力・既存テストの無変更)

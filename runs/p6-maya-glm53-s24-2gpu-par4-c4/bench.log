@@ -1,0 +1,35 @@
+2026-10-23 03:18:12,890 INFO label=p6-maya-glm53-s24-2gpu-par4-c4 api=openai base_url=http://127.0.0.1:18083 model=default
+2026-10-23 03:18:12,891 INFO warmup=1 repeats=2 scenarios=[('short', 0, 512), ('ctx8k', 8000, 256)] extra_body={}
+2026-10-23 03:18:12,909 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23785 MiB
+2026-10-23 03:18:12,910 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 19449 MiB
+2026-10-23 03:18:12,910 INFO host RAM used: 76.8 GiB
+2026-10-23 03:18:12,911 INFO note: Project Maya 1.1.20 Maya-S24 --gpus 0,1 --parallel 4, 4 requests at once
+2026-10-23 03:18:48,040 INFO short warmup: in=85 out=512 ttft=1.82s prefill=46.8 decode=15.5 finish=length
+2026-10-23 03:18:48,041 INFO short warmup: in=83 out=512 ttft=3.53s prefill=23.5 decode=16.2 finish=length
+2026-10-23 03:18:48,041 INFO short warmup: in=87 out=512 ttft=2.67s prefill=32.5 decode=15.9 finish=length
+2026-10-23 03:18:48,042 INFO short warmup: in=85 out=512 ttft=0.95s prefill=89.5 decode=15.1 finish=length
+2026-10-23 03:19:23,549 INFO short #1: in=86 out=512 ttft=2.28s prefill=37.7 decode=15.6 finish=length
+2026-10-23 03:19:23,550 INFO short #1: in=84 out=512 ttft=1.54s prefill=54.5 decode=15.2 finish=length
+2026-10-23 03:19:23,550 INFO short #1: in=83 out=512 ttft=2.96s prefill=28.0 decode=15.7 finish=length
+2026-10-23 03:19:23,550 INFO short #1: in=86 out=512 ttft=0.79s prefill=108.9 decode=14.9 finish=length
+2026-10-23 03:19:23,551 INFO short #1: 同時 4 件の合計 decode 57.7 tok/s
+2026-10-23 03:19:57,871 INFO short #2: in=81 out=512 ttft=2.94s prefill=27.5 decode=16.3 finish=length
+2026-10-23 03:19:57,872 INFO short #2: in=81 out=512 ttft=0.78s prefill=104.3 decode=15.4 finish=length
+2026-10-23 03:19:57,873 INFO short #2: in=86 out=512 ttft=2.24s prefill=38.4 decode=16.1 finish=length
+2026-10-23 03:19:57,873 INFO short #2: in=83 out=512 ttft=1.50s prefill=55.4 decode=15.8 finish=length
+2026-10-23 03:19:57,873 INFO short #2: 同時 4 件の合計 decode 59.7 tok/s
+2026-10-23 03:20:40,150 INFO ctx8k warmup: in=7351 out=256 ttft=7.17s prefill=1025.8 decode=7.3 finish=length
+2026-10-23 03:20:40,151 INFO ctx8k warmup: in=7349 out=256 ttft=19.50s prefill=376.8 decode=11.3 finish=length
+2026-10-23 03:20:40,151 INFO ctx8k warmup: in=7351 out=256 ttft=13.34s prefill=550.9 decode=8.9 finish=length
+2026-10-23 03:20:40,152 INFO ctx8k warmup: in=7350 out=256 ttft=25.69s prefill=286.1 decode=15.4 finish=length
+2026-10-23 03:21:22,117 INFO ctx8k #1: in=7349 out=256 ttft=6.68s prefill=1100.2 decode=7.3 finish=length
+2026-10-23 03:21:22,118 INFO ctx8k #1: in=7349 out=256 ttft=25.64s prefill=286.6 decode=15.6 finish=length
+2026-10-23 03:21:22,118 INFO ctx8k #1: in=7350 out=256 ttft=19.31s prefill=380.6 decode=11.4 finish=length
+2026-10-23 03:21:22,119 INFO ctx8k #1: in=7350 out=256 ttft=12.97s prefill=566.9 decode=8.9 finish=length
+2026-10-23 03:21:22,119 INFO ctx8k #1: 同時 4 件の合計 decode 24.4 tok/s
+2026-10-23 03:22:03,996 INFO ctx8k #2: in=7353 out=256 ttft=12.97s prefill=567.0 decode=8.9 finish=length
+2026-10-23 03:22:03,997 INFO ctx8k #2: in=7352 out=256 ttft=6.68s prefill=1100.9 decode=7.3 finish=length
+2026-10-23 03:22:03,998 INFO ctx8k #2: in=7351 out=256 ttft=19.32s prefill=380.5 decode=11.4 finish=length
+2026-10-23 03:22:03,998 INFO ctx8k #2: in=7348 out=256 ttft=25.64s prefill=286.6 decode=15.7 finish=length
+2026-10-23 03:22:03,998 INFO ctx8k #2: 同時 4 件の合計 decode 24.5 tok/s
+2026-10-23 03:22:04,002 INFO 結果: runs/p6-maya-glm53-s24-2gpu-par4-c4

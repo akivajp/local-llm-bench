@@ -1,0 +1,4 @@
+このリポジトリは LLM 推論エンジンの速度を計測する Python ツール (llm-bench) です。
+`llm-bench compare` コマンドに `--csv <パス>` オプションを追加してください。指定されたら、現在 `--markdown` で書き出しているのと同じ比較表 (label、各シナリオの prefill / decode、VRAM peak、RAM peak、disk read mean) を CSV ファイルにも書き出すようにしてください。
+あわせて tests/ に、このオプションのテストを追加してください (一時ディレクトリに summary.json を2つ作って compare を呼び、CSV のヘッダーと行数を確認する程度でよい)。
+最後に `uv run pytest -q` を実行して、既存のテストも含めて全て通ることを確認してください。既存のテストは変更しないでください。

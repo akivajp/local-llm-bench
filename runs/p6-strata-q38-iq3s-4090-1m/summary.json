@@ -1,0 +1,106 @@
+{
+  "label": "p6-strata-q38-iq3s-4090-1m",
+  "scenarios": [
+    {
+      "scenario": "ctx32k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 33599.0,
+      "completion_tokens": 243.0,
+      "ttft_median": 16.05759271098941,
+      "prefill_tps_median": 2092.405792370465,
+      "decode_tps_median": 110.41454448095553,
+      "decode_tps_mean": 110.41454448095553
+    },
+    {
+      "scenario": "ctx128k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 139271.0,
+      "completion_tokens": 241.0,
+      "ttft_median": 60.43973731099686,
+      "prefill_tps_median": 2304.295256668165,
+      "decode_tps_median": 123.71151359415184,
+      "decode_tps_mean": 123.71151359415184
+    },
+    {
+      "scenario": "ctx256k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 280047.0,
+      "completion_tokens": 252.0,
+      "ttft_median": 129.24841091400594,
+      "prefill_tps_median": 2166.734569652282,
+      "decode_tps_median": 126.6150049702067,
+      "decode_tps_mean": 126.6150049702067
+    },
+    {
+      "scenario": "ctx512k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 571074.0,
+      "completion_tokens": 270.0,
+      "ttft_median": 282.7165654900018,
+      "prefill_tps_median": 2019.952382380635,
+      "decode_tps_median": 109.94754253543915,
+      "decode_tps_mean": 109.94754253543915
+    },
+    {
+      "scenario": "ctx1m",
+      "n_ok": 0,
+      "n_err": 1,
+      "prompt_tokens": null,
+      "completion_tokens": null,
+      "ttft_median": null,
+      "prefill_tps_median": null,
+      "decode_tps_median": null,
+      "decode_tps_mean": null
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23767,
+    "gpu0_util_mean": 99.15853658536585,
+    "gpu1_mem_peak_mib": 13,
+    "gpu1_util_mean": 0.0,
+    "host_used_peak_gib": 74.03125762939453,
+    "disk_read_total_gb": 5.54532864,
+    "disk_read_mean_gbps": 0.01117872473003348,
+    "disk_read_peak_gbps": 0.29584538171756436
+  },
+  "needle": {
+    "ctx32k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        33599
+      ]
+    },
+    "ctx128k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        139271
+      ]
+    },
+    "ctx256k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        280047
+      ]
+    },
+    "ctx512k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        571074
+      ]
+    },
+    "ctx1m": {
+      "n": 1,
+      "found": 0,
+      "prompt_tokens": []
+    }
+  },
+  "concurrency_rounds": []
+}

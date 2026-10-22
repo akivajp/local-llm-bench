@@ -1,0 +1,36 @@
+{
+  "label": "p6-strata-q38-iq3s-4090-1m-retry",
+  "scenarios": [
+    {
+      "scenario": "ctx1m",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 1001153.0,
+      "completion_tokens": 156.0,
+      "ttft_median": 573.1927457559941,
+      "prefill_tps_median": 1746.6253845895442,
+      "decode_tps_median": 89.48022677384385,
+      "decode_tps_mean": 89.48022677384385
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23783,
+    "gpu0_util_mean": 99.11929824561403,
+    "gpu1_mem_peak_mib": 13,
+    "gpu1_util_mean": 0.0,
+    "host_used_peak_gib": 73.99211883544922,
+    "disk_read_total_gb": 5.55055104,
+    "disk_read_mean_gbps": 0.009651978922927205,
+    "disk_read_peak_gbps": 0.21982113055481042
+  },
+  "needle": {
+    "ctx1m": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        1001153
+      ]
+    }
+  },
+  "concurrency_rounds": []
+}

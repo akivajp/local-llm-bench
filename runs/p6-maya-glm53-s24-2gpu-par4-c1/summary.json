@@ -1,0 +1,39 @@
+{
+  "label": "p6-maya-glm53-s24-2gpu-par4-c1",
+  "scenarios": [
+    {
+      "scenario": "short",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 84.5,
+      "completion_tokens": 512.0,
+      "ttft_median": 0.7719258764991537,
+      "prefill_tps_median": 109.46161752188749,
+      "decode_tps_median": 52.02615884406042,
+      "decode_tps_mean": 52.02615884406042
+    },
+    {
+      "scenario": "ctx8k",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 7350.0,
+      "completion_tokens": 256.0,
+      "ttft_median": 6.424162167000759,
+      "prefill_tps_median": 1144.1274271795487,
+      "decode_tps_median": 49.424978021679,
+      "decode_tps_mean": 49.424978021679
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23785,
+    "gpu0_util_mean": 78.54263565891473,
+    "gpu1_mem_peak_mib": 19449,
+    "gpu1_util_mean": 73.29457364341086,
+    "host_used_peak_gib": 76.73427200317383,
+    "disk_read_total_gb": 0.527273984,
+    "disk_read_mean_gbps": 0.007785516802125468,
+    "disk_read_peak_gbps": 0.3367518908893501
+  },
+  "needle": {},
+  "concurrency_rounds": []
+}

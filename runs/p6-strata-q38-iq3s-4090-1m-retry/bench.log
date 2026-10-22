@@ -1,0 +1,8 @@
+2026-10-23 01:44:19,629 INFO label=p6-strata-q38-iq3s-4090-1m-retry api=openai base_url=http://127.0.0.1:18080 model=default
+2026-10-23 01:44:19,630 INFO warmup=0 repeats=1 scenarios=[('ctx1m', 960000, 1024)] extra_body={}
+2026-10-23 01:44:19,650 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23655 MiB
+2026-10-23 01:44:19,650 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 13 MiB
+2026-10-23 01:44:19,651 INFO host RAM used: 72.9 GiB
+2026-10-23 01:44:19,651 INFO note: Strata IQ3_S GPU=0 --max-context 1048576 YaRN x4, 1M target lowered to 960000
+2026-10-23 01:53:54,719 INFO ctx1m #1: in=1001153 out=156 ttft=573.19s prefill=1746.6 decode=89.5 finish=stop needle=OK
+2026-10-23 01:53:54,745 INFO 結果: runs/p6-strata-q38-iq3s-4090-1m-retry

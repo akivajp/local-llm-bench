@@ -1,0 +1,39 @@
+{
+  "label": "p6-maya-glm53-s24-4090-par4-c1",
+  "scenarios": [
+    {
+      "scenario": "short",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 85.0,
+      "completion_tokens": 512.0,
+      "ttft_median": 1.2729450470069423,
+      "prefill_tps_median": 66.79378922044839,
+      "decode_tps_median": 34.53762394460415,
+      "decode_tps_mean": 34.53762394460415
+    },
+    {
+      "scenario": "ctx8k",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 7348.0,
+      "completion_tokens": 256.0,
+      "ttft_median": 5.346784052497242,
+      "prefill_tps_median": 1374.3876157840718,
+      "decode_tps_median": 29.881666978041924,
+      "decode_tps_mean": 29.881666978041924
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23515,
+    "gpu0_util_mean": 98.26404494382022,
+    "gpu1_mem_peak_mib": 13,
+    "gpu1_util_mean": 0.0,
+    "host_used_peak_gib": 76.98927307128906,
+    "disk_read_total_gb": 61.869678592,
+    "disk_read_mean_gbps": 0.658436044356711,
+    "disk_read_peak_gbps": 3.162353105221143
+  },
+  "needle": {},
+  "concurrency_rounds": []
+}

@@ -1,0 +1,50 @@
+{
+  "label": "p6-maya-glm53-s24-2gpu-mtp",
+  "scenarios": [
+    {
+      "scenario": "short",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 82.0,
+      "completion_tokens": 512.0,
+      "ttft_median": 0.6583326320032938,
+      "prefill_tps_median": 124.5587645086928,
+      "decode_tps_median": 53.601345556866164,
+      "decode_tps_mean": 53.601345556866164
+    },
+    {
+      "scenario": "ctx8k",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 7348.0,
+      "completion_tokens": 256.0,
+      "ttft_median": 6.31062328650296,
+      "prefill_tps_median": 1164.3859162329118,
+      "decode_tps_median": 54.41930140739777,
+      "decode_tps_mean": 54.41930140739777
+    },
+    {
+      "scenario": "ctx32k",
+      "n_ok": 2,
+      "n_err": 0,
+      "prompt_tokens": 29868.0,
+      "completion_tokens": 128.0,
+      "ttft_median": 19.266119060499477,
+      "prefill_tps_median": 1550.2875032902857,
+      "decode_tps_median": 53.52476656531255,
+      "decode_tps_mean": 53.52476656531255
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23599,
+    "gpu0_util_mean": 67.09274193548387,
+    "gpu1_mem_peak_mib": 19497,
+    "gpu1_util_mean": 72.83064516129032,
+    "host_used_peak_gib": 71.96011734008789,
+    "disk_read_total_gb": 0.107282432,
+    "disk_read_mean_gbps": 0.0008252121277587349,
+    "disk_read_peak_gbps": 0.06441618693459057
+  },
+  "needle": {},
+  "concurrency_rounds": []
+}

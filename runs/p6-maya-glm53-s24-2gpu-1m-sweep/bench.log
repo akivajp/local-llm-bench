@@ -1,0 +1,13 @@
+2026-10-23 00:42:29,105 INFO label=p6-maya-glm53-s24-2gpu-1m-sweep api=openai base_url=http://127.0.0.1:18083 model=default
+2026-10-23 00:42:29,106 INFO warmup=0 repeats=1 scenarios=[('ctx512k-d10', 552000, 1024), ('ctx512k-d50', 552000, 1024), ('ctx512k-d90', 552000, 1024), ('ctx1m-d10', 1040000, 1024), ('ctx1m-d50', 1040000, 1024), ('ctx1m-d90', 1040000, 1024)] extra_body={}
+2026-10-23 00:42:29,125 INFO GPU: 0, NVIDIA GeForce RTX 4090, 24564 MiB, 23585 MiB
+2026-10-23 00:42:29,125 INFO GPU: 1, NVIDIA RTX 4000 Ada Generation, 20475 MiB, 19489 MiB
+2026-10-23 00:42:29,126 INFO host RAM used: 79.3 GiB
+2026-10-23 00:42:29,126 INFO note: Project Maya 1.1.20 Maya-S24 --gpus 0,1 --max-context 1048576, RAM headroom 14GB, needle depth sweep
+2026-10-23 00:48:42,664 INFO ctx512k-d10 #1: in=525855 out=11 ttft=373.08s prefill=1409.5 decode=27.1 finish=stop needle=OK
+2026-10-23 00:54:53,093 INFO ctx512k-d50 #1: in=525857 out=13 ttft=369.93s prefill=1421.5 decode=29.9 finish=stop needle=OK
+2026-10-23 01:01:04,372 INFO ctx512k-d90 #1: in=525855 out=11 ttft=370.87s prefill=1417.9 decode=30.7 finish=stop needle=OK
+2026-10-23 01:15:14,919 INFO ctx1m-d10 #1: in=998528 out=12 ttft=849.94s prefill=1174.8 decode=23.9 finish=stop needle=OK
+2026-10-23 01:29:32,057 INFO ctx1m-d50 #1: in=998532 out=13 ttft=856.49s prefill=1165.8 decode=23.2 finish=stop needle=OK
+2026-10-23 01:43:51,334 INFO ctx1m-d90 #1: in=998529 out=13 ttft=858.63s prefill=1162.9 decode=24.5 finish=stop needle=OK
+2026-10-23 01:43:51,341 INFO 結果: runs/p6-maya-glm53-s24-2gpu-1m-sweep

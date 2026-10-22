@@ -1,0 +1,2 @@
+2026-10-23 03:01:03,316 INFO label=q-maya-glm53-maya-l-2gpu api=openai base_url=http://127.0.0.1:18083 問題数=30 max_tokens=4096 extra_body=None note=Project Maya 1.1.20 Maya-L --gpus 0,1
+2026-10-23 03:11:36,245 INFO 結果: runs/q-maya-glm53-maya-l-2gpu

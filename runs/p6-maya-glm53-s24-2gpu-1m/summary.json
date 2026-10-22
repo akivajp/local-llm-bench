@@ -1,0 +1,108 @@
+{
+  "label": "p6-maya-glm53-s24-2gpu-1m",
+  "scenarios": [
+    {
+      "scenario": "ctx32k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 31778.0,
+      "completion_tokens": 13.0,
+      "ttft_median": 21.78473317300086,
+      "prefill_tps_median": 1458.7279884329455,
+      "decode_tps_median": 23.84557723389304,
+      "decode_tps_mean": 23.84557723389304
+    },
+    {
+      "scenario": "ctx128k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 132185.0,
+      "completion_tokens": 13.0,
+      "ttft_median": 85.49882349101244,
+      "prefill_tps_median": 1546.0446659116328,
+      "decode_tps_median": 33.227160925684586,
+      "decode_tps_mean": 33.227160925684586
+    },
+    {
+      "scenario": "ctx256k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 266274.0,
+      "completion_tokens": 12.0,
+      "ttft_median": 171.3138432889973,
+      "prefill_tps_median": 1554.3052148495085,
+      "decode_tps_median": 33.25522316187446,
+      "decode_tps_mean": 33.25522316187446
+    },
+    {
+      "scenario": "ctx512k",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 525854.0,
+      "completion_tokens": 31.0,
+      "ttft_median": 368.71519299699867,
+      "prefill_tps_median": 1426.179365503608,
+      "decode_tps_median": 23.324042744980044,
+      "decode_tps_mean": 23.324042744980044
+    },
+    {
+      "scenario": "ctx1m",
+      "n_ok": 1,
+      "n_err": 0,
+      "prompt_tokens": 998530.0,
+      "completion_tokens": 12.0,
+      "ttft_median": 853.1981496129883,
+      "prefill_tps_median": 1170.3377468093834,
+      "decode_tps_median": 21.771216604258292,
+      "decode_tps_mean": 21.771216604258292
+    }
+  ],
+  "resources": {
+    "gpu0_mem_peak_mib": 23585,
+    "gpu0_util_mean": 59.628532974428,
+    "gpu1_mem_peak_mib": 19489,
+    "gpu1_util_mean": 91.52759084791386,
+    "host_used_peak_gib": 79.43294906616211,
+    "disk_read_total_gb": 1557.358104576,
+    "disk_read_mean_gbps": 1.0364560122583488,
+    "disk_read_peak_gbps": 2.504306298118685
+  },
+  "needle": {
+    "ctx32k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        31778
+      ]
+    },
+    "ctx128k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        132185
+      ]
+    },
+    "ctx256k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        266274
+      ]
+    },
+    "ctx512k": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        525854
+      ]
+    },
+    "ctx1m": {
+      "n": 1,
+      "found": 1,
+      "prompt_tokens": [
+        998530
+      ]
+    }
+  },
+  "concurrency_rounds": []
+}
