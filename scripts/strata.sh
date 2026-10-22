@@ -79,6 +79,33 @@ json.dump(cfg, open(dst, "w"), indent=1)
 print(dst, out)
 PY
     ;;
+  ctx-config)
+    # コンテキスト長だけを変えた設定を作る: strata.sh ctx-config 1048576 → strata-<model>-ctx1048576.json
+    # 学習時の 262144 を超える分は setup と同じく YaRN (--rope-scaling yarn --rope-scale 長さ/262144) を付ける
+    ctx="${2:?コンテキスト長を指定してください}"
+    tag="$(printf '%s' "$MODEL" | tr 'A-Z' 'a-z')"
+    docker run --rm -i -v "${DATA_DIR}:/data" --entrypoint /opt/strata/.venv/bin/python "$IMAGE" - \
+      "/data/config/strata-${tag}.json" "/data/config/strata-${tag}-ctx${ctx}.json" "$ctx" <<'PY'
+import json, sys
+src, dst, ctx = sys.argv[1], sys.argv[2], int(sys.argv[3])
+cfg = json.load(open(src))
+args, out, skip = cfg["args"], [], False
+for a in args:
+    if skip:
+        skip = False
+        continue
+    if a in ("--max-context", "--rope-scaling", "--rope-scale"):
+        skip = True
+        continue
+    out.append(a)
+out += ["--max-context", str(ctx)]
+if ctx > 262144:
+    out += ["--rope-scaling", "yarn", "--rope-scale", f"{ctx / 262144:g}"]
+cfg["args"] = out
+json.dump(cfg, open(dst, "w"), indent=1)
+print(dst, out)
+PY
+    ;;
   up)
     shift
     envs=()

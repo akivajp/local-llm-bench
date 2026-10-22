@@ -149,3 +149,28 @@ def test_nvme_read_bytes_counts_whole_disks_only(tmp_path) -> None:
     a = Sample(t=0.0, gpu_mem_mib=[], gpu_util=[], host_used_gib=0, disk_read_bytes=0)
     b = Sample(t=2.0, gpu_mem_mib=[], gpu_util=[], host_used_gib=0, disk_read_bytes=4_000_000_000)
     assert _rate_gbps(a, b) == 2.0
+
+
+def test_build_needle_prompt_places_answer_at_depth() -> None:
+    from local_llm_bench.prompts import build_needle_prompt
+
+    p, ans = build_needle_prompt(2000, 0.5, nonce="abc", seed=1)
+    assert ans in p and p.count(ans) == 1
+    body = p.split("以下は参考資料です。\n", 1)[1]
+    pos = body.index(ans) / len(body)
+    assert 0.4 < pos < 0.6
+    p0, _ = build_needle_prompt(2000, 0.0, nonce="abc", seed=1)
+    assert p0.split("以下は参考資料です。\n", 1)[1].startswith("【重要】")
+    # 同じ nonce なら同じ合言葉、違えば別 (キャッシュ無効化と再現性の両立)
+    assert build_needle_prompt(100, 0.5, nonce="abc")[1] == build_needle_prompt(100, 0.9, nonce="abc")[1]
+    assert build_needle_prompt(100, 0.5, nonce="abc")[1] != build_needle_prompt(100, 0.5, nonce="xyz")[1]
+
+
+def test_round_stats_aggregate() -> None:
+    from local_llm_bench.cli import _round_stats
+
+    a = _r("s", 10, 101, 0.0, 1.0, 11.0)   # 100 トークンを 10 秒
+    b = _r("s", 10, 101, 0.0, 2.0, 12.0)
+    st = _round_stats("s", 2, [a, b])
+    assert st["completion_tokens"] == 202 and st["wall_s"] == 12.0
+    assert abs(st["aggregate_tps"] - 202 / 12) < 1e-9

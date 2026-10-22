@@ -15,6 +15,7 @@ import subprocess
 import sys
 import time
 import uuid
+from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -36,7 +37,7 @@ from rich.table import Table
 from .client import run_request
 from .metrics import RequestResult, ScenarioSummary, summarize
 from .monitor import ResourceMonitor, gpu_info, host_used_gib
-from .prompts import build_prompt
+from .prompts import build_needle_prompt, build_prompt
 
 console = Console()
 log = logging.getLogger("llm-bench")
@@ -119,6 +120,7 @@ def cmd_run(args: argparse.Namespace) -> int:
     monitor = ResourceMonitor(interval=cfg.get("monitor_interval", 0.5), csv_path=out_dir / "monitor.csv")
     monitor.start()
     results: list[RequestResult] = []
+    rounds: list[dict[str, Any]] = []   # 同時送信 (concurrency > 1) の回ごとの合計スループット
     jsonl = (out_dir / "results.jsonl").open("a", encoding="utf-8")
     plan = [(s, i, i < cfg["warmup"]) for s in cfg["scenarios"] for i in range(cfg["warmup"] + cfg["repeats"])]
 
@@ -144,50 +146,42 @@ def cmd_run(args: argparse.Namespace) -> int:
                     """受信チャンク数で進捗バーを進める。"""
                     progress.update(_task, completed=n, info=f"{n} chunk / {time.perf_counter() - _t0:.1f}s")
 
-                # シナリオごとに指示文・詰め物ファイルを上書きできる
-                prompt = build_prompt(
-                    scen["prompt_tokens"],
-                    scen.get("instruction", cfg["instruction"]),
-                    nonce=uuid.uuid4().hex,
-                    seed=cfg["seed"],
-                    filler_file=scen.get("filler_file"),
-                )
-                r = run_request(
-                    api=cfg["api"],
-                    base_url=cfg["base_url"],
-                    model=cfg["model"],
-                    prompt=prompt,
-                    max_tokens=scen["max_tokens"],
-                    scenario=scen["name"],
-                    repeat=idx - cfg["warmup"],
-                    api_key=cfg["api_key"],
-                    timeout=cfg["timeout"],
-                    extra_body=cfg.get("extra_body") or None,
-                    on_token=on_token,
-                )
-                progress.remove_task(req_task)
-                rec = r.to_record()
-                rec["warmup"] = is_warmup
-                jsonl.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                jsonl.flush()
-                if r.error:
-                    log.error("%s %s: %s", scen["name"], tag, r.error)
+                # 同時に送る数 (シナリオの concurrency > コマンドラインの --concurrency > 1)
+                conc = int(scen.get("concurrency", args.concurrency or 1))
+                if conc <= 1:
+                    pairs = [_one_request(cfg, scen, idx, on_token)]
                 else:
-                    log.info(
-                        "%s %s: in=%s out=%s ttft=%.2fs prefill=%s decode=%s finish=%s",
-                        scen["name"],
-                        tag,
-                        r.prompt_tokens,
-                        r.completion_tokens,
-                        r.ttft or -1,
-                        _fmt(r.prefill_tps),
-                        _fmt(r.decode_tps),
-                        r.finish_reason,
-                    )
-                if not is_warmup:
-                    results.append(r)
+                    with ThreadPoolExecutor(conc) as ex:
+                        pairs = list(ex.map(lambda _i: _one_request(cfg, scen, idx, None), range(conc)))
+                progress.remove_task(req_task)
+                for r, rec in pairs:
+                    rec["warmup"] = is_warmup
+                    rec["concurrency"] = conc
+                    jsonl.write(json.dumps(rec, ensure_ascii=False) + "\n")
+                    jsonl.flush()
+                    if r.error:
+                        log.error("%s %s: %s", scen["name"], tag, r.error)
+                    else:
+                        log.info(
+                            "%s %s: in=%s out=%s ttft=%.2fs prefill=%s decode=%s finish=%s%s",
+                            scen["name"],
+                            tag,
+                            r.prompt_tokens,
+                            r.completion_tokens,
+                            r.ttft or -1,
+                            _fmt(r.prefill_tps),
+                            _fmt(r.decode_tps),
+                            r.finish_reason,
+                            f" needle={'OK' if rec['needle_found'] else 'NG'}" if "needle_found" in rec else "",
+                        )
+                    if not is_warmup:
+                        results.append(r)
+                if conc > 1 and not is_warmup:
+                    rounds.append(_round_stats(scen["name"], conc, [r for r, _ in pairs]))
+                    log.info("%s %s: 同時 %d 件の合計 decode %.1f tok/s", scen["name"], tag, conc,
+                             rounds[-1]["aggregate_tps"] or -1)
                 progress.advance(overall)
-                if r.error and args.stop_on_error:
+                if any(r.error for r, _ in pairs) and args.stop_on_error:
                     break
     finally:
         monitor.stop()
@@ -197,7 +191,8 @@ def cmd_run(args: argparse.Namespace) -> int:
     peaks = monitor.peaks()
     (out_dir / "summary.json").write_text(
         json.dumps(
-            {"label": args.label, "scenarios": [s.__dict__ for s in summaries], "resources": peaks},
+            {"label": args.label, "scenarios": [s.__dict__ for s in summaries], "resources": peaks,
+             "needle": _needle_summary(out_dir / "results.jsonl"), "concurrency_rounds": rounds},
             ensure_ascii=False,
             indent=2,
         ),
@@ -206,6 +201,85 @@ def cmd_run(args: argparse.Namespace) -> int:
     print_summary(args.label, summaries, peaks)
     log.info("結果: %s", out_dir)
     return 0 if all(s.n_err == 0 for s in summaries) else 1
+
+
+def _one_request(
+    cfg: dict[str, Any], scen: dict[str, Any], idx: int, on_token: Any
+) -> tuple[RequestResult, dict[str, Any]]:
+    """シナリオの1リクエストを組み立てて送り、(結果, JSONL 用の辞書) を返す。
+
+    シナリオに needle_depth があれば合言葉を埋め込み、本文に合言葉が含まれるかを判定する。
+    """
+    nonce = uuid.uuid4().hex
+    answer: str | None = None
+    if "needle_depth" in scen:
+        prompt, answer = build_needle_prompt(scen["prompt_tokens"], float(scen["needle_depth"]), nonce, seed=cfg["seed"])
+    else:
+        # シナリオごとに指示文・詰め物ファイルを上書きできる
+        prompt = build_prompt(
+            scen["prompt_tokens"],
+            scen.get("instruction", cfg["instruction"]),
+            nonce=nonce,
+            seed=cfg["seed"],
+            filler_file=scen.get("filler_file"),
+        )
+    r = run_request(
+        api=cfg["api"],
+        base_url=cfg["base_url"],
+        model=cfg["model"],
+        prompt=prompt,
+        max_tokens=scen["max_tokens"],
+        scenario=scen["name"],
+        repeat=idx - cfg["warmup"],
+        api_key=cfg["api_key"],
+        timeout=cfg["timeout"],
+        extra_body=cfg.get("extra_body") or None,
+        on_token=on_token,
+        keep_content=answer is not None,
+    )
+    rec = r.to_record()
+    if answer is not None:
+        content = r.extra.get("content", "")
+        rec["needle_depth"] = float(scen["needle_depth"])
+        rec["needle_expected"] = answer
+        rec["needle_found"] = answer in content
+        rec["content_tail"] = content[-300:]
+        rec["extra"].pop("content", None)   # 本文全体は大きいので保存しない (末尾だけ残す)
+    return r, rec
+
+
+def _round_stats(name: str, conc: int, rs: list[RequestResult]) -> dict[str, Any]:
+    """同時に送った1回分の合計スループット (全出力トークン / 最初の送信から最後の受信まで)。"""
+    ok = [r for r in rs if r.error is None and r.t_last is not None]
+    tokens = sum(r.completion_tokens or 0 for r in ok)
+    span = (max(r.t_last for r in ok) - min(r.t_send for r in ok)) if ok else 0.0  # type: ignore[type-var]
+    per = [v for r in ok if (v := r.decode_tps) is not None]
+    return {
+        "scenario": name,
+        "concurrency": conc,
+        "n_ok": len(ok),
+        "completion_tokens": tokens,
+        "wall_s": span,
+        "aggregate_tps": tokens / span if span > 0 else None,
+        "per_request_decode_tps_mean": sum(per) / len(per) if per else None,
+    }
+
+
+def _needle_summary(jsonl_path: Path) -> dict[str, Any]:
+    """results.jsonl から、シナリオごとの合言葉の正解数を集計する (warmup は除く)。"""
+    out: dict[str, Any] = {}
+    if not jsonl_path.exists():
+        return out
+    for line in jsonl_path.read_text(encoding="utf-8").splitlines():
+        rec = json.loads(line)
+        if "needle_found" not in rec or rec.get("warmup"):
+            continue
+        st = out.setdefault(rec["scenario"], {"n": 0, "found": 0, "prompt_tokens": []})
+        st["n"] += 1
+        st["found"] += int(bool(rec["needle_found"]))
+        if rec.get("prompt_tokens"):
+            st["prompt_tokens"].append(rec["prompt_tokens"])
+    return out
 
 
 def _fmt(v: float | None, digits: int = 1) -> str:
@@ -420,6 +494,7 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument("--max-tokens", type=int, help="全シナリオの生成上限を上書き")
     r.add_argument("--extra-body", help='ボディに足す JSON (例: \'{"chat_template_kwargs":{"enable_thinking":false}}\')')
     r.add_argument("--stop-on-error", action="store_true", help="エラーが出たら残りを中止する")
+    r.add_argument("--concurrency", type=int, help="1回に同時に送るリクエスト数 (合計スループットを測る。既定 1)")
     r.set_defaults(func=cmd_run)
 
     w = sub.add_parser("wait", help="サーバーの起動を待つ")

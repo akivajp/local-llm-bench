@@ -18,17 +18,20 @@ usage() {
   cat <<EOF
 usage: $(basename "$0") setup [maya.sh の引数...]   ビルドとモデルの準備だけ (--setup --yes --plain --no-start を付ける)
        $(basename "$0") up [maya.sh の引数...]      サーバーを起動 (127.0.0.1:${PORT})
+       $(basename "$0") exec [maya.sh の引数...]    1回だけ実行 (例: exec --calibrate --no-start)
        $(basename "$0") down | logs | -h | --help
 
 例: $(basename "$0") setup --model Maya-S24 --gguf-dir /gguf/GLM-5.3-Flash-Maya-GGUF/Maya-S24 --gpus 0,1 --no-vision
     $(basename "$0") up --gpu 0
-環境変数: MAYA_IMAGE, MAYA_NAME, MAYA_PORT, MAYA_RUN (起動スクリプト名。例: run-maya-maya-s24.sh)
+環境変数: MAYA_IMAGE, MAYA_NAME, MAYA_PORT, MAYA_RUN (起動スクリプト名。例: run-maya-maya-s24.sh),
+          MAYA_CONFIG (maya-*.json を直接指定), MAYA_NETWORK (既定 host), MAYA_DOCKER_ENV, MAYA_DOCKER_ARGS
 EOF
 }
 
 common_args() {
   # memlock 無制限: Maya は空き RAM を pinned memory として固定する
-  echo --gpus all --ipc=host --network host --ulimit memlock=-1 --stop-timeout 120 \
+  # MAYA_NETWORK: 既定はホストと共有。外部と通信できない環境での確認には internal ネットワークを指定する
+  echo --gpus all --ipc=host --network "${MAYA_NETWORK:-host}" --ulimit memlock=-1 --stop-timeout 120 \
     --user "$(id -u):$(id -g)" -e HOME=/maya/home -e MAYA_UPDATE_CHECK=0 \
     -v "${LAB}/maya:/maya" -v "${LAB}/gguf:/gguf" -w /maya/project-maya
   # MAYA_DOCKER_ENV="K=V K2=V2": エンジンの設定をコンテナの環境変数として渡す
@@ -51,6 +54,18 @@ case "${1:-}" in
       ./maya.sh --setup --yes --plain --no-start --port "$PORT" "$@" </dev/null >"$f" 2>&1
     echo "setup done (exit=$?)"
     ;;
+  exec)
+    # 任意の maya.sh のコマンドを1回だけ実行する (例: exec --calibrate --no-start)。MAYA_RUN で設定を選べる
+    shift
+    mkdir -p "$LOG_DIR"
+    f="${LOG_DIR}/${NAME}-exec-$(date +%Y%m%d-%H%M%S).log"
+    start=(./maya.sh)
+    [[ -n "${MAYA_RUN:-}" ]] && start=("./${MAYA_RUN}")
+    echo "exec ${start[*]} $* (log: $f)"
+    # shellcheck disable=SC2046
+    docker run --rm --name "${NAME}-exec" $(common_args) "$IMAGE" "${start[@]}" --plain --port "$PORT" "$@" </dev/null >"$f" 2>&1
+    echo "exec done (exit=$?)"
+    ;;
   up)
     shift
     docker rm -f "$NAME" >/dev/null 2>&1 || true
@@ -58,6 +73,8 @@ case "${1:-}" in
     # 起動スクリプト (setup が書く run-maya-<model>.sh) を明示する
     start=(./maya.sh)
     [[ -n "${MAYA_RUN:-}" ]] && start=("./${MAYA_RUN}")
+    # MAYA_CONFIG: 設定ファイル (maya-*.json) を直接指定して起動する (同じモデルでコンテキスト長だけ違う設定など)
+    [[ -n "${MAYA_CONFIG:-}" ]] && start=(.venv/bin/python maya.py --config "${MAYA_CONFIG}")
     # shellcheck disable=SC2046
     docker run -d --name "$NAME" $(common_args) "$IMAGE" "${start[@]}" --plain --port "$PORT" "$@" >/dev/null
     echo "started ${NAME} on 127.0.0.1:${PORT} (${start[*]}) args=$*"

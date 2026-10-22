@@ -21,6 +21,35 @@ _WORDS = (
 _TOKENS_PER_WORD = 1.3
 
 
+NEEDLE_INSTRUCTION = (
+    "上の資料のどこかに「合言葉」が1つだけ書かれています。その合言葉を答えてください。"
+    "最後の行に「答え: <合言葉>」の形式で書いてください。"
+)
+
+
+def build_needle_prompt(target_tokens: int, depth: float, nonce: str, seed: int = 0) -> tuple[str, str]:
+    """長い詰め物の指定位置に合言葉を1つ埋め込んだプロンプトと、その合言葉を返す (needle-in-a-haystack)。
+
+    Args:
+        target_tokens: 詰め物部分のおおよそのトークン数。
+        depth: 合言葉を置く位置 (0.0 = 先頭、1.0 = 末尾)。
+        nonce: 先頭に置く、リクエストごとに異なる文字列 (キャッシュ無効化用)。合言葉の生成にも使う。
+        seed: 詰め物の乱数シード。
+    """
+    rng = random.Random(f"{nonce}-{seed}")
+    # 詰め物の単語と紛れないよう、英大文字・数字の組み合わせにする
+    answer = "".join(rng.choice("ABCDEFGHJKLMNPQRSTUVWXYZ") for _ in range(4)) + "-" + str(rng.randrange(1000, 9999))
+    needle = f"【重要】この資料の合言葉は「{answer}」です。"
+    words_rng = random.Random(seed)
+    n_words = max(1, int(target_tokens / _TOKENS_PER_WORD))
+    words = [words_rng.choice(_WORDS) for _ in range(n_words)]
+    lines = [f"{i // 20 + 1}. " + " ".join(words[i : i + 20]) for i in range(0, n_words, 20)]
+    pos = min(len(lines), max(0, int(len(lines) * depth)))
+    lines.insert(pos, needle)
+    prompt = "\n\n".join([f"[request-id: {nonce}]", "以下は参考資料です。\n" + "\n".join(lines), NEEDLE_INSTRUCTION])
+    return prompt, answer
+
+
 # ソースコードはおおむね 1トークン ≈ 3.5 文字
 _CHARS_PER_TOKEN_CODE = 3.5
 
