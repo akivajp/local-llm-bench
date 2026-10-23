@@ -2,6 +2,8 @@
 
 ## RAM (tools/membw.c、配列 2GiB × 3本、10回の最速)
 
+DDR5-5600 48GB × 2 枚、デュアルチャネル (dmidecode で確認、2026-10-23)。理論値 5600 MT/s × 8 B × 2 ch = 89.6 GB/s。
+
 ```
 threads=1  Read: 21.6 GB/s  Copy: 36.3 GB/s  Triad: 39.0 GB/s  (check 118097.0 2.0)
 threads=4  Read: 60.7 GB/s  Copy: 41.5 GB/s  Triad: 45.3 GB/s  (check 118097.0 2.0)
